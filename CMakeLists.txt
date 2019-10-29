@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(PathTracer)
 
 set(CMAKE_CXX_STANDARD 14)
-set(SOURCE_FILES src/main.cpp)
+set(SOURCE_FILES src/main.cpp include/vec3.h)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-Wall -DEDBUG")
 
