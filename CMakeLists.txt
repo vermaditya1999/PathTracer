@@ -3,7 +3,7 @@ project(PathTracer)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES src/main.cpp include/vec3.h src/Object.cpp include/Object.h src/Ray.cpp include/Ray.h)
+set(SOURCE_FILES src/main.cpp include/vec3.h src/Object.cpp include/Object.h src/Ray.cpp include/Ray.h include/Color.h)
 
 
 include_directories(include)
