@@ -6,7 +6,7 @@
 
 #ifndef NDEBUG
 #define debug(fmt , ...) do {\
-    fprintf(stderr , "[%s:%s():%d] ", __FILE__ , __FUNC__ , __LINE__  );\
+    fprintf(stderr , "[%s:%s():%d] ", __FILE__ , __func__ , __LINE__  );\
     fprintf(stderr , fmt , __VA_ARGS__); \
     puts(""); \
 }while(0)

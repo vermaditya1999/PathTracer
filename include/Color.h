@@ -49,7 +49,7 @@ public:
 
     inline Color &operator-=(double val);
 
-    friend std::ostream &operator<<(std::ostream &out, Color color);
+    inline friend std::ostream &operator<<(std::ostream &out, Color color);
 };
 
 void Color::clamp() {

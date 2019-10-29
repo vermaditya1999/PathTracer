@@ -56,7 +56,7 @@ public:
 
     inline vec3 &operator-=(double val);
 
-    friend std::ostream &operator<<(std::ostream &out, vec3 vec);
+    inline friend std::ostream &operator<<(std::ostream &out, vec3 vec);
 };
 
 double vec3::length() const {
