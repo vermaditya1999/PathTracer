@@ -9,7 +9,7 @@ Object *Ray::getIntersectedObject() {
 }
 
 void Ray::setParameter(Object *object, double _t) {
-    if (_t > 0 && _t < t) {
+    if (_t > 0 && (!intersected() || _t < t)) {
         intersectedObject = object;
         t = _t;
     }
