@@ -16,13 +16,13 @@ public:
 
     explicit vec3(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
 
-    inline void normalize();
+    static inline vec3 &normalize(vec3 &vec);
 
-    inline double length() const;
+    static inline double length(const vec3 &vec);
 
-    inline double dot(vec3 vec) const;
+    static inline double dot(const vec3 &a, const vec3 &b);
 
-    inline vec3 cross(vec3 vec) const;
+    static inline vec3 cross(const vec3 &a, const vec3 &b);
 
     inline vec3 operator*(vec3 vec);
 
@@ -59,25 +59,27 @@ public:
     inline friend std::ostream &operator<<(std::ostream &out, vec3 vec);
 };
 
-double vec3::length() const {
-    return std::sqrt(x * x + y * y + z * z);
+vec3 &vec3::normalize(vec3 &vec) {
+    double len = vec3::length(vec);
+    vec.x /= len;
+    vec.y /= len;
+    vec.z /= len;
+
+    return vec;
 }
 
-void vec3::normalize() {
-    double len = length();
-    x /= len;
-    y /= len;
-    z /= len;
+double vec3::length(const vec3 &vec) {
+    std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
-double vec3::dot(const vec3 vec) const {
-    return x * vec.x + y * vec.y + z * vec.z;
+double vec3::dot(const vec3 &a, const vec3 &b) {
+    return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
-vec3 vec3::cross(const vec3 vec) const {
-    return vec3(y * vec.z - z * vec.y,
-                z * vec.x - x * vec.z,
-                x * vec.y - y * vec.x);
+vec3 vec3::cross(const vec3 &a, const vec3 &b) {
+    return vec3(a.y * b.z - a.z * b.y,
+                a.z * b.x - a.x * b.z,
+                a.x * b.y - a.y * b.x);
 }
 
 vec3 &vec3::operator*=(const vec3 vec) {

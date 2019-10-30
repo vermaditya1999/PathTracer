@@ -7,10 +7,8 @@
 #include "Ray.h"
 
 class Camera {
-private:
-    vec3 eye;
-    vec3 gaze;
-    vec3 top;
+protected:
+    vec3 eye, gaze, top;
     double imageDistance;
     Image image;
 
@@ -28,9 +26,9 @@ public:
         return image.getWidth();
     }
 
-    virtual Ray getRay(int row, int col) const;
+    virtual Ray getRay(int row, int col) const = 0;
 
-    virtual void shadePixel(int row, int col, Color color);
+    virtual void shadePixel(int row, int col, Color color) = 0;
 };
 
 

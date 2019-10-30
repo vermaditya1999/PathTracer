@@ -12,8 +12,8 @@ void Sphere::intersect(Ray &ray) {
     vec3 origin = ray.getOrigin() , dir = ray.getDirection();
     vec3 cv = origin - center;
     double a = 1.0;
-    double b = 2*dir.dot(cv);
-    double c = cv.dot(cv) - radius*radius;
+    double b = 2 * vec3::dot(dir, cv);
+    double c = vec3::dot(cv, cv) - radius * radius;
     double D = b*b - 4*a*c;
 
     if (D == 0.0) {
