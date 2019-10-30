@@ -14,3 +14,11 @@ void Ray::setParameter(Object *object, double _t) {
         t = _t;
     }
 }
+
+const vec3 &Ray::getOrigin() const {
+    return origin;
+}
+
+const vec3 &Ray::getDirection() const {
+    return direction;
+}

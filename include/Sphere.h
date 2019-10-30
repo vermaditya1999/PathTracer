@@ -4,10 +4,10 @@
 #include "Object.h"
 #include "vec3.h"
 
-class Circle: public Object {
+class Sphere: public Object {
     vec3 radius, center;
 public:
-    Circle(const Material &material, const vec3 &radius, const vec3 &center) : Object(material), radius(radius),
+    Sphere(const Material &material, const vec3 &radius, const vec3 &center) : Object(material), radius(radius),
                                                                                center(center) {}
 };
 

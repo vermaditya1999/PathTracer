@@ -10,6 +10,12 @@ class Ray {
 private:
     vec3 origin;
     vec3 direction;
+public:
+    const vec3 &getOrigin() const;
+
+    const vec3 &getDirection() const;
+
+private:
     double t;  // Parameter
     Object *intersectedObject;
 
