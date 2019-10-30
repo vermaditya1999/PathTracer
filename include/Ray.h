@@ -1,21 +1,15 @@
 #ifndef PATHTRACER_RAY_H
 #define PATHTRACER_RAY_H
 
-
-#include "vec3.h"
 #include "Object.h"
+#include "vec3.h"
 
 
+class Object;
 class Ray {
 private:
     vec3 origin;
     vec3 direction;
-public:
-    const vec3 &getOrigin() const;
-
-    const vec3 &getDirection() const;
-
-private:
     double t;  // Parameter
     Object *intersectedObject;
 
@@ -24,6 +18,10 @@ public:
             origin(_origin), direction(_direction), t(_t), intersectedObject(nullptr) {
 
     }
+
+    const vec3 &getOrigin() const;
+
+    const vec3 &getDirection() const;
 
     // Returns true if ray has intersected an object.
     bool intersected();

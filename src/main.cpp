@@ -49,5 +49,4 @@ int main(int argc , char *argv[])
         std::vector<int> v = {255 , 0 , 0};
         image.push_back(v);
     }
-    ppm_image(image , options.filename , 256 , 256);
 }
