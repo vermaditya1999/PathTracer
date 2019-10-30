@@ -7,26 +7,6 @@
 #include "debug.h"
 
 
-void ppm_image(std::vector<std::vector<int>> &data , std::string file_name, int n , int m)
-{
-    debug("Writing to file %s\n" , file_name.c_str());
-    FILE *fp = fopen(file_name.c_str() , "w");
-    if (!fp){
-        fprintf(stderr , "Cannot open file %s : " , file_name.c_str());
-        perror(" ");
-        return;
-    }
-    if (data.size() != n*m){
-        std::cout << "Data not complete to print image" << std::endl;
-        return;
-    }
-
-    fprintf(fp , "P3\n%d  %d\n255\n" , m , n);
-    for(int i=0; i<n*m ;i+=1){
-        fprintf(fp,"%d %d %d " , data[i][0] , data[i][1] , data[i][2]);
-    }
-}
-
 class Options{
 public:
     std::string filename;
