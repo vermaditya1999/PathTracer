@@ -4,16 +4,15 @@
 #include "Color.h"
 
 class Material {
+private:
     Color color;
-public:
-    const Color &getColor() const {
-        return color;
-    }
 
 public:
     explicit Material(const Color &c) : color(c) {}
 
-
+    const Color &getColor() const {
+        return color;
+    }
 };
 
-#endif //PATHTRACER_MATERIAL_H
+#endif

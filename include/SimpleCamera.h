@@ -1,7 +1,6 @@
 #ifndef PATHTRACER_SIMPLECAMERA_H
 #define PATHTRACER_SIMPLECAMERA_H
 
-
 #include "Camera.h"
 
 class SimpleCamera : public Camera {
@@ -10,6 +9,5 @@ public:
 
     void shadePixel(int row, int col, Color color) override;
 };
-
 
 #endif

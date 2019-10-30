@@ -1,7 +1,6 @@
 #ifndef PATHTRACER_SCENE_H
 #define PATHTRACER_SCENE_H
 
-
 #include <vector>
 #include "Object.h"
 #include "Camera.h"
@@ -11,17 +10,18 @@ class Scene {
 private:
     std::vector<Object *> objects;
     std::vector<Light *> lights;
-    Camera camera;
+    Camera *camera;
 
 public:
-    Scene() : objects(), lights(), camera() {}
+    explicit Scene(Camera *_camera) : camera(_camera), objects(), lights() {}
 
-    void setCamera(Camera &_camera);
+    void addObject(Object *object) {
+        objects.push_back(object);
+    }
 
-    void addObject(Object *object);
-
-    void addLight(Light *light);
+    void addLight(Light *light) {
+        lights.push_back(light);
+    }
 };
-
 
 #endif

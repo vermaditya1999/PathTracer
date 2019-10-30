@@ -35,5 +35,4 @@ void Options::parse() {
     }
 }
 
-
 #endif

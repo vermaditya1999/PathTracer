@@ -5,6 +5,7 @@
 #include "vec3.h"
 
 class Object;
+
 class Ray {
 private:
     vec3 origin;
