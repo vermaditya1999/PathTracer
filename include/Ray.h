@@ -5,7 +5,7 @@
 #include "vec3.h"
 #include "Object.h"
 
-
+class Object;
 class Ray {
 private:
     vec3 origin;
@@ -16,6 +16,10 @@ private:
 public:
     explicit Ray(const vec3 _origin, const vec3 _direction, double _t) :
             origin(_origin), direction(_direction), t(_t), intersectedObject(nullptr) {}
+
+    const vec3 &getOrigin() const;
+
+    const vec3 &getDirection() const;
 
     // Returns true if ray has intersected an object.
     bool intersected();
