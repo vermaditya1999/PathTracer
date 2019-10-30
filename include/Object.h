@@ -16,5 +16,4 @@ public:
     virtual void intersect(Ray &ray) = 0;
 };
 
-
 #endif
