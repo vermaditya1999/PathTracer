@@ -14,16 +14,16 @@ void SimpleRenderer::render(Scene scene) {
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
 
-    for (int i = 1; i <= width; ++i) {
-        for (int j = 1; j <= height; ++j) {
-            Ray ray = camera->getRay(i, j);
+    for (int i = 0; i < width; ++i) {
+        for (int j = 0; j < height; ++j) {
+            Ray ray = camera->getRay(j, i);
             for (Object *object : objects) {
                 object->intersect(ray);
             }
             if (ray.intersected()) {
-                camera->shadePixel(i, j, tracePath(ray, 1));
+                camera->shadePixel(j, i, tracePath(ray, 1));
             } else {
-                camera->shadePixel(i, j, Color(0));
+                camera->shadePixel(j, i, Color(0));
             }
         }
     }

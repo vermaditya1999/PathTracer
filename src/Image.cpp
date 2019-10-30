@@ -26,7 +26,7 @@ void Image::savePPM(std::string filename) const {
         return;
     }
 
-    fprintf(fp, "P3\n%d  %d\n255\n", height, width );
+    fprintf(fp, "P3\n%d  %d\n255\n", width, height);
     for (int i = 0; i < height * width ; ++i) {
         fprintf(fp, "%d %d %d ", (int)buffer[i].r*255, (int)buffer[i].g*255, (int)buffer[i].b*255);
     }
