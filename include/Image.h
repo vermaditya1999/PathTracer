@@ -10,6 +10,8 @@ class Image {
     int height , width;
     std::vector<Color> buffer;
 public:
+    explicit Image() : height(), width(), buffer() {}
+
     explicit Image(int height, int width) : height(height), width(width), buffer(width*height) {}
 
     int getHeight() const;

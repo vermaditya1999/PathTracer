@@ -15,9 +15,7 @@ private:
 
 public:
     explicit Ray(const vec3 _origin, const vec3 _direction, double _t) :
-            origin(_origin), direction(_direction), t(_t), intersectedObject(nullptr) {
-
-    }
+            origin(_origin), direction(_direction), t(_t), intersectedObject(nullptr) {}
 
     // Returns true if ray has intersected an object.
     bool intersected();

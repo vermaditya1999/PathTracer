@@ -15,6 +15,8 @@ private:
     Image image;
 
 public:
+    Camera() : eye(), gaze(), top(), imageDistance(), image() {}
+
     Camera(vec3 _eye, vec3 _gaze, vec3 _top, double _imageDistance, Image &_image) :
             eye(_eye), gaze(_gaze), top(_top), imageDistance(_imageDistance), image(_image) {}
 
