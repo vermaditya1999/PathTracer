@@ -5,6 +5,7 @@
 
 #include "vec3.h"
 #include "Color.h"
+#include "debug.h"
 
 class Image {
 private:
@@ -18,7 +19,7 @@ public:
     int getWidth() const;
 
     void setPixel(int row, int col, const Color c) {
-        buffer[height * row + col] = c;
+        buffer[width * row + col] = c;
     }
 
     Color getPixel(int row, int col) const {
