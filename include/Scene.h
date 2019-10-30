@@ -22,6 +22,18 @@ public:
     void addLight(Light *light) {
         lights.push_back(light);
     }
+
+    const std::vector<Object *> &getObjects() const {
+        return objects;
+    }
+
+    const std::vector<Light *> &getLights() const {
+        return lights;
+    }
+
+    Camera *getCamera() const {
+        return camera;
+    }
 };
 
 #endif

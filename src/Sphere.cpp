@@ -5,10 +5,7 @@
 #include "vec3.h"
 #include "debug.h"
 
-
 void Sphere::intersect(Ray &ray) {
-    debug("Checking Ray intersection with sphere %d" , 1);
-
     vec3 origin = ray.getOrigin() , dir = ray.getDirection();
     vec3 cv = origin - center;
     double a = 1.0;

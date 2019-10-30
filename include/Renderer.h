@@ -5,11 +5,11 @@
 #include "Ray.h"
 
 class Renderer {
-private:
-    virtual void tracePath(Ray &ray, int depth);
+protected:
+    virtual Color tracePath(Ray &ray, int depth) = 0;
 
 public:
-    virtual void render(Scene scene);
+    virtual void render(Scene scene) = 0;
 };
 
 #endif

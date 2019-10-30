@@ -25,7 +25,7 @@ public:
         return buffer[height * row + col];
     }
 
-    void savePPM(std::string filename);
+    void savePPM(std::string filename) const;
 };
 
 #endif

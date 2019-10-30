@@ -13,7 +13,7 @@ int Image::getWidth() const {
     return width;
 }
 
-void Image::savePPM(std::string filename) {
+void Image::savePPM(std::string filename) const {
     debug("Writing to file %s\n", filename.c_str());
     FILE *fp = fopen(filename.c_str(), "w");
     if (!fp) {

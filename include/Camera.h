@@ -40,6 +40,10 @@ public:
         return image.getWidth();
     }
 
+    void saveFile(std::string file) const {
+        image.savePPM(file + ".ppm");
+    }
+
     virtual Ray getRay(int row, int col) const = 0;
 
     virtual void shadePixel(int row, int col, Color color) = 0;
