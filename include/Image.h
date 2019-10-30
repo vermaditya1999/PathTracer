@@ -1,4 +1,3 @@
-
 #ifndef PATHTRACER_IMAGE_H
 #define PATHTRACER_IMAGE_H
 
