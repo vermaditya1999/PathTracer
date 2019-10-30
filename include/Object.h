@@ -4,11 +4,12 @@
 
 #include "vec3.h"
 #include "Ray.h"
-
+#include "Material.h"
 
 class Object {
-private:
-    vec3 position;
+    Material material;
+public:
+    explicit Object(const Material &material) : material(material) {}
 
 public:
     virtual void intersect(Ray &ray);
