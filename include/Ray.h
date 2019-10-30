@@ -20,10 +20,6 @@ public:
 
     const vec3 &getDirection() const;
 
-    const vec3 &getOrigin() const;
-
-    const vec3 &getDirection() const;
-
     // Returns true if ray has intersected an object.
     bool intersected();
 
