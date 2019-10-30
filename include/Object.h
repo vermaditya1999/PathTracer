@@ -11,7 +11,7 @@ private:
     vec3 position;
 
 public:
-    // TODO: Create intersect method
+    virtual void intersect(Ray &ray);
 };
 
 
