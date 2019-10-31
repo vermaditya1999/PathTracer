@@ -10,11 +10,11 @@ int main(int argc , char *argv[])
 //    options.parse();
 
     Camera *camera = new SimpleCamera(vec3(0, 0, 1000), vec3(0, 0, -1), vec3(0, 1, 0), 5,
-                                      800, 400);
+                                      1080, 1920);
     Scene scene(camera);
 
     Material mat(Color(1.0, 0.0, 0.0));
-    Sphere *sphere = new Sphere(mat, 100, vec3(100, -100, -100));
+    Sphere *sphere = new Sphere(mat, 50, vec3(0, 0, -100));
     scene.addObject(sphere);
 
     SimpleRenderer renderer;

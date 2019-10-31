@@ -1,8 +1,4 @@
-#include <debug.h>
-#include <iostream>
 #include "SimpleRenderer.h"
-
-#include "debug.h"
 
 Color SimpleRenderer::tracePath(Ray &ray, int depth) {
     return Color(1.0, 0.0, 0.0);
@@ -30,5 +26,5 @@ void SimpleRenderer::render(Scene scene) {
         }
     }
 
-    camera->saveFile("FIRST");
+    camera->saveFile("image");
 }

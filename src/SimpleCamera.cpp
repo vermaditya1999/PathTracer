@@ -2,8 +2,8 @@
 
 Ray SimpleCamera::getRay(int row, int col) const {
     vec3 origin = w * -imageDistance +
-                  u * (-(double) getImageHeight() / 2 + col + 0.5) +
-                  v * ((double) getImageWidth() / 2 - row - 0.5);
+                  u * (-(double) getImageWidth() / 2 + col + 0.5) +
+                  v * ((double) getImageHeight() / 2 - row - 0.5);
 
     vec3 direction(origin - e);
     direction.normalize();

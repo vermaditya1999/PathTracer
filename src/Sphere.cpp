@@ -1,9 +1,7 @@
-
 #include <cmath>
 
 #include "Sphere.h"
 #include "vec3.h"
-#include "debug.h"
 
 void Sphere::intersect(Ray &ray) {
     vec3 origin = ray.getOrigin() , dir = ray.getDirection();
