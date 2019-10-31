@@ -15,50 +15,40 @@ public:
 
     explicit Color(double _r, double _g, double _b) : r(_r), g(_g), b(_b) {}
 
-    inline void clamp();
+    inline Color &clamp();
 
-    inline Color operator*(Color color);
+    inline Color operator*(Color color) const;
 
-    inline Color operator*(double val);
+    inline Color operator+(Color color) const;
 
-    inline Color operator/(Color color);
+    inline Color operator-(Color color) const;
 
-    inline Color operator/(double val);
+    inline Color operator*(double val) const;
 
-    inline Color operator+(Color color);
-
-    inline Color operator+(double val);
-
-    inline Color operator-(Color color);
-
-    inline Color operator-(double val);
+    inline Color operator/(double val) const;
 
     inline Color &operator*=(Color color);
 
     inline Color &operator*=(double val);
 
-    inline Color &operator/=(Color color);
-
     inline Color &operator/=(double val);
 
     inline Color &operator+=(Color color);
 
-    inline Color &operator+=(double val);
-
     inline Color &operator-=(Color color);
-
-    inline Color &operator-=(double val);
 
     inline friend std::ostream &operator<<(std::ostream &out, Color color);
 };
 
-void Color::clamp() {
+Color &Color::clamp() {
     if (r < 0) r = 0.0;
     if (g < 0) g = 0.0;
     if (b < 0) b = 0.0;
     if (r > 1) r = 1.0;
     if (g > 1) g = 1.0;
     if (b > 1) b = 1.0;
+
+    return *this;
 }
 
 Color &Color::operator*=(const Color color) {
@@ -73,14 +63,6 @@ Color &Color::operator*=(const double val) {
     r *= val;
     g *= val;
     b *= val;
-
-    return *this;
-}
-
-Color &Color::operator/=(const Color color) {
-    r /= color.r;
-    g /= color.g;
-    b /= color.b;
 
     return *this;
 }
@@ -101,14 +83,6 @@ Color &Color::operator+=(const Color color) {
     return *this;
 }
 
-Color &Color::operator+=(const double val) {
-    r += val;
-    g += val;
-    b += val;
-
-    return *this;
-}
-
 Color &Color::operator-=(const Color color) {
     r -= color.r;
     g -= color.g;
@@ -117,44 +91,24 @@ Color &Color::operator-=(const Color color) {
     return *this;
 }
 
-Color &Color::operator-=(const double val) {
-    r -= val;
-    g -= val;
-    b -= val;
-
-    return *this;
-}
-
-Color Color::operator*(const Color color) {
+Color Color::operator*(const Color color) const {
     return Color(r * color.r, g * color.g, b * color.b);
 }
 
-Color Color::operator*(const double val) {
+Color Color::operator*(const double val) const {
     return Color(r * val, g * val, b * val);
 }
 
-Color Color::operator/(const Color color) {
-    return Color(r / color.r, g / color.g, b / color.b);
-}
-
-Color Color::operator/(const double val) {
+Color Color::operator/(const double val) const {
     return Color(r / val, g / val, b / val);
 }
 
-Color Color::operator+(const Color color) {
+Color Color::operator+(const Color color) const {
     return Color(r + color.r, g + color.g, b + color.b);
 }
 
-Color Color::operator+(const double val) {
-    return Color(r + val, g + val, b + val);
-}
-
-Color Color::operator-(const Color color) {
+Color Color::operator-(const Color color) const {
     return Color(r - color.r, g - color.g, b - color.b);
-}
-
-Color Color::operator-(const double val) {
-    return Color(r - val, g - val, b - val);
 }
 
 std::ostream &operator<<(std::ostream &out, const Color color) {
