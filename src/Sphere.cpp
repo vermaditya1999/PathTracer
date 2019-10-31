@@ -13,13 +13,13 @@ void Sphere::intersect(Ray &ray) {
 
     if (D == 0.0) {
         double t = -b/(2*a);
-        ray.setParameter(this , t);
+        ray.setParameter(this, (origin + dir * t - center).normalize(), t);
     }
 
-    if (D > 0.0){
+    if (D > 0.0) {
         double d = sqrt(D);
-        double t1 = (-b + d)/(2*a) , t2 = (-b - d)/(2*a);
-        ray.setParameter(this , t1);
-        ray.setParameter(this , t2);
+        double t1 = (-b + d) / (2 * a), t2 = (-b - d) / (2 * a);
+        ray.setParameter(this, (origin + dir * t1 - center).normalize(), t1);
+        ray.setParameter(this, (origin + dir * t2 - center).normalize(), t2);
     }
 }

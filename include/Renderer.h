@@ -5,9 +5,6 @@
 #include "Ray.h"
 
 class Renderer {
-protected:
-    virtual Color tracePath(Ray &ray, int depth) = 0;
-
 public:
     virtual void render(Scene scene) = 0;
 };

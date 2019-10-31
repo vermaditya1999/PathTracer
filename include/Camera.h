@@ -40,6 +40,10 @@ public:
         return image.getWidth();
     }
 
+    vec3 getPosition() const {
+        return e;
+    };
+
     void saveFile(std::string file) const {
         image.savePPM(file + ".ppm");
     }

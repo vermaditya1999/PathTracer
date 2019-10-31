@@ -15,6 +15,10 @@ public:
     explicit Object(const Material &material) : material(material) {}
 
     virtual void intersect(Ray &ray) = 0;
+
+    const Material &getMaterial() const {
+        return material;
+    }
 };
 
 #endif

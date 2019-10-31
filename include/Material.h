@@ -4,15 +4,15 @@
 #include "Color.h"
 
 class Material {
-private:
-    Color color;
-
 public:
-    explicit Material(const Color &c) : color(c) {}
+    Color color;
+    double ka;
+    double kd;
+    double ks;
+    double alpha;
 
-    const Color &getColor() const {
-        return color;
-    }
+    explicit Material(const Color &color, double ka, double kd, double ks, double alpha) : color(color), ka(ka), kd(kd),
+                                                                                           ks(ks), alpha(alpha) {}
 };
 
 #endif

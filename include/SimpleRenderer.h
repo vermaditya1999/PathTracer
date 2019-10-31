@@ -4,8 +4,8 @@
 #include "Renderer.h"
 
 class SimpleRenderer : public Renderer {
-protected:
-    Color tracePath(Ray &ray, int depth) override;
+private:
+    Color tracePath(Ray &ray, int depth, const std::vector<Light *> &lights, Camera *camera);
 
 public:
     void render(Scene scene) override;
