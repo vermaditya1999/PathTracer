@@ -37,6 +37,9 @@ public:
 
     inline Color &operator-=(Color color);
 
+    inline friend Color operator*(double val, Color color);
+
+    inline friend Color operator-(Color color);
     inline friend std::ostream &operator<<(std::ostream &out, Color color);
 };
 
@@ -109,6 +112,14 @@ Color Color::operator+(const Color color) const {
 
 Color Color::operator-(const Color color) const {
     return Color(r - color.r, g - color.g, b - color.b);
+}
+
+Color operator*(const double val, const Color color) {
+    return color * val;
+}
+
+Color operator-(Color color) {
+    return color * -1;
 }
 
 std::ostream &operator<<(std::ostream &out, const Color color) {
