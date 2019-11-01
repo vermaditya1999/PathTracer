@@ -22,20 +22,16 @@ public:
     inline double length();
 
     inline vec3 operator*(vec3 vec) const;
-
     inline vec3 operator+(vec3 vec) const;
-
     inline vec3 operator-(vec3 vec) const;
+
     inline vec3 &operator*=(vec3 vec);
     inline vec3 &operator+=(vec3 vec);
     inline vec3 &operator-=(vec3 vec);
 
     inline vec3 operator*(double val) const;
-
     inline vec3 operator/(double val) const;
-
     inline vec3 &operator*=(double val);
-
     inline vec3 &operator/=(double val);
 
     inline friend vec3 operator*(double val, vec3 vec);

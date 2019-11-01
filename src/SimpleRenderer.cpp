@@ -44,7 +44,7 @@ void SimpleRenderer::render(Scene scene) {
             if (ray.intersected()) {
                 camera->shadePixel(i, j, tracePath(ray, 1, lights, camera));
             } else {
-                camera->shadePixel(i, j, Color(0));
+                camera->shadePixel(i, j, Color(0.0));
             }
         }
     }
