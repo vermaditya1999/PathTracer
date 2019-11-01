@@ -8,28 +8,19 @@
 class Camera {
 protected:
     vec3 e, g, t;
-    vec3 u, v, w;
-    double imageDistance;
     Image image;
 
-    void createAxis() {
-        w = -g / g.length();
+    vec3 u, v, w;
+    double focalDistance;
 
-        u = vec3::cross(t, w);
-        u.normalize();
-
-        v = vec3::cross(w, u);
-    }
+    void createAxis();
 
 public:
-    Camera(vec3 _e, vec3 _g, vec3 _t, double _imageDistance, int height, int width) :
-            e(_e), g(_g), t(_t), imageDistance(_imageDistance), image(height, width) {
+    Camera(vec3 _e, vec3 _g, vec3 _t, double verticalFov, int imageHeight, int imageWidth) :
+            e(_e), g(_g), t(_t), image(imageHeight, imageWidth) {
         createAxis();
-    }
-
-    Camera(vec3 _e, vec3 _g, vec3 _t, double _imageDistance, Image &_image) :
-            e(_e), g(_g), t(_t), imageDistance(_imageDistance), image(_image) {
-        createAxis();
+        focalDistance = imageHeight / (2.0 * tan(verticalFov * M_PI / 360.0));
+        std::cout << focalDistance << std::endl;
     }
 
     int getImageHeight() const {
