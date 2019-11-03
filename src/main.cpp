@@ -2,6 +2,7 @@
 #include <SimpleCamera.h>
 #include <SimpleRenderer.h>
 #include <Sphere.h>
+#include <Triangle.h>
 #include "Options.h"
 
 int main(int argc , char *argv[])
@@ -13,17 +14,23 @@ int main(int argc , char *argv[])
                                       30, 600, 800);
     Scene scene(camera);
 
-    Material mat1(Color(1.0, 0.4, 0.8), 0.2, 0.4, 0.4, 32);
-    Sphere *sphere1 = new Sphere(mat1, 100, vec3(300, 0, -2000));
-    scene.addObject(sphere1);
+//    Material mat1(Color(1.0, 0.4, 0.8), 0.2, 0.4, 0.4, 32);
+//    Sphere *sphere1 = new Sphere(mat1, 100, vec3(300, 0, -2000));
+//    scene.addObject(sphere1);
+//
+//    Material mat2(Color(0.3, 0.8, 0.2), 0.2, 0.4, 0.4, 32);
+//    Sphere *sphere2 = new Sphere(mat2, 100, vec3(-300, 0, -2000));
+//    scene.addObject(sphere2);
+//
+//    Material mat3(Color(0.5, 0.2, 0.8), 0.2, 0.4, 0.4, 32);
+//    Sphere *sphere3 = new Sphere(mat3, 100, vec3(0, 0, -2000));
+//    scene.addObject(sphere3);
 
-    Material mat2(Color(0.3, 0.8, 0.2), 0.2, 0.4, 0.4, 32);
-    Sphere *sphere2 = new Sphere(mat2, 100, vec3(-300, 0, -2000));
-    scene.addObject(sphere2);
-
-    Material mat3(Color(0.5, 0.2, 0.8), 0.2, 0.4, 0.4, 32);
-    Sphere *sphere3 = new Sphere(mat3, 100, vec3(0, 0, -2000));
-    scene.addObject(sphere3);
+    Material mat4(Color(1.0, 1.0, 0.2), 0.1, 0.7, 0.2, 16);
+    Triangle *triangle1 = new Triangle(mat4, vec3(-100, 0, -2000),
+                                       vec3(0, 100, -2000),
+                                       vec3(100, 0, -2000));
+    scene.addObject(triangle1);
 
     Light *light1 = new Light(vec3(500, 500, -1000), Color(1.0, 1.0, 1.0));
     scene.addLight(light1);
