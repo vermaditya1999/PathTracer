@@ -35,17 +35,22 @@ void SimpleRenderer::render(Scene scene) {
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
 
+    int numAliases = 16;
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
-            Ray ray = camera->getRay(i, j);
-            for (auto object : objects) {
-                object->intersect(ray);
+            Color shade;
+            for (int aliases = 0; aliases < numAliases; ++aliases) {
+                Ray ray = camera->getRay(i, j);
+                for (auto object : objects) {
+                    object->intersect(ray);
+                }
+                if (ray.intersected()) {
+                    shade += tracePath(ray, 1, lights, camera);
+                } else {
+                    shade += Color(0.0);
+                }
             }
-            if (ray.intersected()) {
-                camera->shadePixel(i, j, tracePath(ray, 1, lights, camera));
-            } else {
-                camera->shadePixel(i, j, Color(0.0));
-            }
+            camera->shadePixel(i, j, shade / numAliases);
         }
     }
 
