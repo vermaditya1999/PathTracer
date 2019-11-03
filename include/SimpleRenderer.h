@@ -5,7 +5,7 @@
 
 class SimpleRenderer : public Renderer {
 private:
-    Color tracePath(Ray &ray, int depth, const std::vector<Light *> &lights, Camera *camera);
+    Color tracePath(Ray &ray, int depth, Scene &scene);
 
 public:
     void render(Scene scene) override;

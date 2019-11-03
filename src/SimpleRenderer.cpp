@@ -1,9 +1,12 @@
 #include "SimpleRenderer.h"
 
-Color SimpleRenderer::tracePath(Ray &ray, int depth, const std::vector<Light *> &lights, Camera *camera) {
+Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
+    Camera *camera = scene.getCamera();
+    const std::vector<Light *> &lights = scene.getLights();
+
     vec3 normal = ray.getNormal();
-    vec3 point = ray.getIntersectedPoint();
-    vec3 viewDirection = (camera->getPosition() - point).normalize();
+    vec3 intersectionPoint = ray.getIntersectedPoint();
+    vec3 viewDirection = (camera->getPosition() - intersectionPoint).normalize();
     Material mat = ray.getIntersectedObject()->getMaterial();
     double ka = mat.ka;
     double kd = mat.kd;
@@ -12,7 +15,7 @@ Color SimpleRenderer::tracePath(Ray &ray, int depth, const std::vector<Light *> 
     Color finalColor;
 
     for (auto light : lights) {
-        vec3 lightDirection = (light->getPosition() - point).normalize();
+        vec3 lightDirection = (light->getPosition() - intersectionPoint).normalize();
 
         // Diffused
         finalColor += kd * light->getColor() * std::max(vec3::dot(lightDirection, normal), 0.0);
@@ -35,7 +38,7 @@ void SimpleRenderer::render(Scene scene) {
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
 
-    int numAliases = 16;
+    int numAliases = 4;
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color shade;
@@ -45,7 +48,7 @@ void SimpleRenderer::render(Scene scene) {
                     object->intersect(ray);
                 }
                 if (ray.intersected()) {
-                    shade += tracePath(ray, 1, lights, camera);
+                    shade += tracePath(ray, 1, scene);
                 } else {
                     shade += Color(0.0);
                 }

@@ -30,7 +30,7 @@ public:
         return buffer[width * row + col];
     }
 
-    void savePPM(std::string filename) const;
+    void savePPM(const std::string &filename) const;
 };
 
 #endif

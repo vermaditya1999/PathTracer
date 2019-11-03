@@ -11,7 +11,7 @@ int Image::getWidth() const {
     return width;
 }
 
-void Image::savePPM(std::string filename) const {
+void Image::savePPM(const std::string &filename) const {
 
     FILE *filePointer = fopen(filename.c_str(), "w");
     if (!filePointer) {

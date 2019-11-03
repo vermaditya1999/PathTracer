@@ -20,7 +20,7 @@ public:
             e(_e), g(_g), t(_t), image(imageHeight, imageWidth) {
         createAxis();
         focalDistance = imageHeight / (2.0 * tan(verticalFov * M_PI / 360.0));
-        std::cout << focalDistance << std::endl;
+        debug("Focal Distance: %f", focalDistance);
     }
 
     int getImageHeight() const {
@@ -35,7 +35,7 @@ public:
         return e;
     };
 
-    void saveFile(std::string file) const {
+    void saveFile(const std::string &file) const {
         image.savePPM(file + ".ppm");
     }
 
