@@ -10,9 +10,11 @@ public:
     double kd;
     double ks;
     double alpha;
+    bool reflective;
 
-    explicit Material(const Color &color, double ka, double kd, double ks, double alpha) : color(color), ka(ka), kd(kd),
-                                                                                           ks(ks), alpha(alpha) {}
+    explicit Material(const Color &color, double ka, double kd, double ks, double alpha, bool reflective = false)
+            : color(color), ka(ka), kd(kd),
+              ks(ks), alpha(alpha), reflective(reflective) {}
 };
 
 #endif
