@@ -2,7 +2,7 @@
 #include <SimpleCamera.h>
 #include <SimpleRenderer.h>
 #include <Sphere.h>
-#include <Triangle.h>
+#include <Rectangle.h>
 #include "Options.h"
 
 int main(int argc , char *argv[])
@@ -14,26 +14,54 @@ int main(int argc , char *argv[])
                                       30, 600, 800);
     Scene scene(camera);
 
-//    Material mat1(Color(1.0, 0.4, 0.8), 0.2, 0.4, 0.4, 32);
-//    Sphere *sphere1 = new Sphere(mat1, 100, vec3(300, 0, -2000));
-//    scene.addObject(sphere1);
-//
-//    Material mat2(Color(0.3, 0.8, 0.2), 0.2, 0.4, 0.4, 32);
-//    Sphere *sphere2 = new Sphere(mat2, 100, vec3(-300, 0, -2000));
-//    scene.addObject(sphere2);
-//
-//    Material mat3(Color(0.5, 0.2, 0.8), 0.2, 0.4, 0.4, 32);
-//    Sphere *sphere3 = new Sphere(mat3, 100, vec3(0, 0, -2000));
-//    scene.addObject(sphere3);
+    Rectangle *leftWall = new Rectangle(Material(Color(0.75, 0.25, 0.25), 0.2, 0.7, 0.1, 16),
+                                        vec3(-400, -400, 0),
+                                        vec3(-400, 400, 0),
+                                        vec3(-400, 400, -2500),
+                                        vec3(-400, -400, -2500));
+    scene.addObject(leftWall);
 
-    Material mat4(Color(1.0, 1.0, 0.2), 0.1, 0.7, 0.2, 16);
-    Triangle *triangle1 = new Triangle(mat4, vec3(-100, 0, -2000),
-                                       vec3(0, 100, -2000),
-                                       vec3(100, 0, -2000));
-    scene.addObject(triangle1);
+    Rectangle *rightWall = new Rectangle(Material(Color(0.25, 0.25, 0.75), 0.2, 0.7, 0.1, 16),
+                                         vec3(400, -400, -2500),
+                                         vec3(400, 400, -2500),
+                                         vec3(400, 400, 0),
+                                         vec3(400, -400, 0));
+    scene.addObject(rightWall);
 
-    Light *light1 = new Light(vec3(500, 500, -1000), Color(1.0, 1.0, 1.0));
+    Rectangle *ceiling = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
+                                       vec3(400, 400, 0),
+                                       vec3(400, 400, -2500),
+                                       vec3(-400, 400, -2500),
+                                       vec3(-400, 400, 0));
+    scene.addObject(ceiling);
+
+    Rectangle *floor = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
+                                     vec3(-400, -400, 0),
+                                     vec3(-400, -400, -2500),
+                                     vec3(400, -400, -2500),
+                                     vec3(400, -400, 0));
+    scene.addObject(floor);
+
+    Rectangle *frontWall = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
+                                         vec3(-400, 400, -2500),
+                                         vec3(400, 400, -2500),
+                                         vec3(400, -400, -2500),
+                                         vec3(-400, -400, -2500));
+    scene.addObject(frontWall);
+
+    Rectangle *backWall = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
+                                        vec3(-400, 400, 0),
+                                        vec3(-400, -400, 0),
+                                        vec3(400, -400, 0),
+                                        vec3(400, 400, 0));
+    scene.addObject(backWall);
+
+    Light *light1 = new Light(vec3(0, 375, -1250), Color(1.0, 1.0, 1.0));
     scene.addLight(light1);
+
+    Sphere *sphere1 = new Sphere(Material(Color(0.1, 0.4, 0.4), 0.2, 0.4, 0.4, 32),
+                                 125, vec3(-150, -275, -2000));
+    scene.addObject(sphere1);
 
     SimpleRenderer renderer;
     renderer.render(scene);

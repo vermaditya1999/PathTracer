@@ -19,8 +19,11 @@ public:
     int getHeight() const;
     int getWidth() const;
 
+    // Apply gamma correction
     void setPixel(int row, int col, const Color color) {
-        buffer[width * row + col] = color;
+        buffer[width * row + col] = Color(pow(color.r, 1.0 / 2.2),
+                                          pow(color.g, 1.0 / 2.2),
+                                          pow(color.b, 1.0 / 2.2));
     }
 
     Color getPixel(int row, int col) const {
