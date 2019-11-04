@@ -10,6 +10,10 @@
  *          approximation for Fresnel's equations.
  * */
 Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
+    if (depth <= 0) {
+        return scene.getBackgroundColor();
+    }
+
     auto &objects = scene.getObjects();
 
     for (auto &object: objects) {
@@ -69,9 +73,10 @@ Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
         }
 
         shade += Color(ka);
+        shade = mat.color * shade.clamp();
     }
 
-    if (dielectric && depth > 0) {
+    if (dielectric) {
         double R;
         vec3 reflectDir, refractDir;
         Color reflectCol, refractCol;
@@ -107,15 +112,14 @@ Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
         }
 
         shade += R * reflectCol + (1 - R) * refractCol;
+        shade.clamp();
     }
 
-    return mat.color * shade.clamp();
+    return shade;
 }
 
 void SimpleRenderer::render(Scene scene) {
     Camera *camera = scene.getCamera();
-    const std::vector<Object *> &objects = scene.getObjects();
-    const std::vector<Light *> &lights = scene.getLights();
 
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
@@ -127,7 +131,7 @@ void SimpleRenderer::render(Scene scene) {
             for (int gridI = 0; gridI < jitterGridSize; ++gridI) {
                 for (int gridJ = 0; gridJ < jitterGridSize; ++gridJ) {
                     Ray ray = camera->getRay(i, j, gridI, gridJ, jitterGridSize);
-                    shade += tracePath(ray, 4, scene);
+                    shade += tracePath(ray, 8, scene);
                 }
             }
             camera->shadePixel(i, j, shade / (jitterGridSize * jitterGridSize));

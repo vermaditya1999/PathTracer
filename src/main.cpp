@@ -15,60 +15,60 @@ int main(int argc , char *argv[])
     Scene scene(camera, Color(0));
 
     Rectangle *leftWall = new Rectangle(Material(Color(0.75, 0.25, 0.25), 0.2, 0.7, 0.1, 16),
-                                        vec3(-400, -410, 10),
-                                        vec3(-400, 410, 10),
-                                        vec3(-400, 410, -2510),
-                                        vec3(-400, -410, -2510));
+                                        vec3(-475, -485, 10),
+                                        vec3(-475, 485, 10),
+                                        vec3(-475, 485, -3010),
+                                        vec3(-475, -485, -3010));
     scene.addObject(leftWall);
 
     Rectangle *rightWall = new Rectangle(Material(Color(0.25, 0.25, 0.75), 0.2, 0.7, 0.1, 16),
-                                         vec3(400, -410, -2510),
-                                         vec3(400, 410, -2510),
-                                         vec3(400, 410, 10),
-                                         vec3(400, -410, 10));
+                                         vec3(475, -485, -3010),
+                                         vec3(475, 485, -3010),
+                                         vec3(475, 485, 10),
+                                         vec3(475, -485, 10));
     scene.addObject(rightWall);
 
     Rectangle *ceiling = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
-                                       vec3(410, 400, 10),
-                                       vec3(410, 400, -2510),
-                                       vec3(-410, 400, -2510),
-                                       vec3(-410, 400, 10));
+                                       vec3(485, 400, 10),
+                                       vec3(485, 400, -3010),
+                                       vec3(-485, 400, -3010),
+                                       vec3(-485, 400, 10));
     scene.addObject(ceiling);
 
     Rectangle *floor = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
-                                     vec3(-410, -400, 10),
-                                     vec3(-410, -400, -2510),
-                                     vec3(410, -400, -2510),
-                                     vec3(410, -400, 10));
+                                     vec3(-485, -400, 10),
+                                     vec3(-485, -400, -3010),
+                                     vec3(485, -400, -3010),
+                                     vec3(485, -400, 10));
     scene.addObject(floor);
 
     Rectangle *frontWall = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
-                                         vec3(-410, 410, -2500),
-                                         vec3(410, 410, -2500),
-                                         vec3(410, -410, -2500),
-                                         vec3(-410, -410, -2500));
+                                         vec3(-485, 485, -3000),
+                                         vec3(485, 485, -3000),
+                                         vec3(485, -485, -3000),
+                                         vec3(-485, -485, -3000));
     scene.addObject(frontWall);
 
-    Rectangle *backWall = new Rectangle(Material(Color(0.75, 0.75, 0.75), 0.2, 0.7, 0.1, 16),
-                                        vec3(-410, 410, 0),
-                                        vec3(-410, -410, 0),
-                                        vec3(410, -410, 0),
-                                        vec3(410, 410, 0));
+    Rectangle *backWall = new Rectangle(Material(Color(0.0, 0.0, 0.0), 0.2, 0.7, 0.1, 16),
+                                        vec3(-485, 485, 0),
+                                        vec3(-485, -485, 0),
+                                        vec3(485, -485, 0),
+                                        vec3(485, 485, 0));
     scene.addObject(backWall);
 
     Sphere *sphere1 = new Sphere(Material(Color(1.0, 1.0, 1.0), 0.1, 0.3, 0.6, 64, true, 1.5),
-                                 125, vec3(-170, -275, -2000));
+                                 125, vec3(-170, -250, -2300));
     scene.addObject(sphere1);
 
     Sphere *sphere2 = new Sphere(Material(Color(1.0, 1.0, 1.0), 0.1, 0.3, 0.6, 64, true, 1.5),
-                                 125, vec3(170, -275, -1750));
+                                 125, vec3(170, -275, -1950));
     scene.addObject(sphere2);
 
     Sphere *sphere3 = new Sphere(Material(Color(1.0, 1.0, 1.0), 0.1, 0.3, 0.6, 64, true, 1.01),
-                                 125, vec3(0, -275, -1500));
+                                 125, vec3(0, -275, -1600));
     scene.addObject(sphere3);
 
-    Light *light1 = new Light(vec3(0, 375, -1750), Color(1.0, 1.0, 1.0));
+    Light *light1 = new Light(vec3(0, 350, -1750), Color(1.0, 1.0, 1.0));
     scene.addLight(light1);
 
     SimpleRenderer renderer;
