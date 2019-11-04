@@ -8,12 +8,14 @@
 
 class Scene {
 private:
+    Camera *camera;
+    Color backgroundColor;
     std::vector<Object *> objects;
     std::vector<Light *> lights;
-    Camera *camera;
 
 public:
-    explicit Scene(Camera *_camera) : camera(_camera), objects(), lights() {}
+    explicit Scene(Camera *camera, Color backgroundColor) : camera(camera), backgroundColor(backgroundColor),
+                                                            objects(), lights() {}
 
     void addObject(Object *object) {
         objects.push_back(object);
@@ -34,6 +36,8 @@ public:
     Camera *getCamera() const {
         return camera;
     }
+
+    Color &getBackgroundColor() { return backgroundColor; }
 };
 
 #endif

@@ -10,7 +10,7 @@ public:
 
     Ray getRay(int row, int col) const override;
 
-    Ray getRay(int row, int col, int i, int j, int gridSize) const override;
+    Ray getRay(int row, int col, int i, int j, int jitterGridSize) const override;
 
     void shadePixel(int row, int col, Color color) override;
 };

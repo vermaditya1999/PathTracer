@@ -42,7 +42,7 @@ public:
     virtual Ray getRay(int row, int col) const = 0;
 
     // Jittered super sampling
-    virtual Ray getRay(int row, int col, int i, int j, int gridSize) const = 0;
+    virtual Ray getRay(int row, int col, int i, int j, int jitterGridSize) const = 0;
 
     virtual void shadePixel(int row, int col, Color color) = 0;
 };

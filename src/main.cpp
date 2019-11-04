@@ -12,7 +12,7 @@ int main(int argc , char *argv[])
 
     Camera *camera = new SimpleCamera(vec3(0, 0, 0), vec3(0, 0, -1), vec3(0, 1, 0),
                                       30, 600, 800);
-    Scene scene(camera);
+    Scene scene(camera, Color(0));
 
     Rectangle *leftWall = new Rectangle(Material(Color(0.75, 0.25, 0.25), 0.2, 0.7, 0.1, 16),
                                         vec3(-400, -410, 10),
