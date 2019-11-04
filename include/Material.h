@@ -5,18 +5,18 @@
 
 class Material {
 public:
-    Color color;
-    double ka;
-    double kd;
-    double ks;
-    double alpha;
-    bool dielectric;
-    double eta;
+    enum class Type {
+        SHINY,
+        GLOSSY,
+        DIFFUSED,
+        DIELECTRIC
+    };
 
-    explicit Material(const Color &color, double ka, double kd, double ks, double alpha, bool dielectric = false,
-                      double eta = 0)
-            : color(color), ka(ka), kd(kd),
-              ks(ks), alpha(alpha), dielectric(dielectric), eta(eta) {}
+    Color color;
+    Type type;
+
+    explicit Material(const Color &color, Material::Type type)
+            : color(color), type(type) {}
 };
 
 #endif

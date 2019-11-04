@@ -10,7 +10,7 @@ private:
     vec3 p1, p2, p3;
 
 public:
-    Triangle(const Material &material, const vec3 &p1, const vec3 &p2, const vec3 &p3) :
+    Triangle(const Material *material, const vec3 &p1, const vec3 &p2, const vec3 &p3) :
             Object(material), p1(p1), p2(p2), p3(p3) {
     }
 

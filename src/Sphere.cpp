@@ -4,7 +4,7 @@
 #include "vec3.h"
 
 void Sphere::intersect(Ray &ray) {
-    vec3 origin = ray.getOrigin() , dir = ray.getDirection();
+    vec3 origin = ray.getOrigin(), dir = ray.getDir();
     vec3 cv = origin - center;
     double a = 1.0;
     double b = 2 * vec3::dot(dir, cv);
@@ -13,13 +13,13 @@ void Sphere::intersect(Ray &ray) {
 
     if (D == 0.0) {
         double t = -b/(2*a);
-        ray.setParameter(this, (origin + dir * t - center).normalize(), t);
+        ray.setParam(this, (origin + dir * t - center).normalize(), t);
     }
 
     if (D > 0.0) {
         double d = sqrt(D);
         double t1 = (-b + d) / (2 * a), t2 = (-b - d) / (2 * a);
-        ray.setParameter(this, (origin + dir * t1 - center).normalize(), t1);
-        ray.setParameter(this, (origin + dir * t2 - center).normalize(), t2);
+        ray.setParam(this, (origin + dir * t1 - center).normalize(), t1);
+        ray.setParam(this, (origin + dir * t2 - center).normalize(), t2);
     }
 }

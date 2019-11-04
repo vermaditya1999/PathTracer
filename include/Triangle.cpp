@@ -2,7 +2,7 @@
 
 void Triangle::intersect(Ray &ray) {
     vec3 origin = ray.getOrigin();
-    vec3 direction = ray.getDirection();
+    vec3 direction = ray.getDir();
 
     double a = p1.x - p2.x;
     double b = p1.y - p2.y;
@@ -26,5 +26,5 @@ void Triangle::intersect(Ray &ray) {
         return;
 
     vec3 normal = vec3::cross(p3 - p2, p2 - p1).normalize();
-    ray.setParameter(this, normal, t);
+    ray.setParam(this, normal, t);
 }

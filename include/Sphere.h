@@ -10,7 +10,7 @@ private:
     double radius;
 
 public:
-    Sphere(const Material &material, double radius, const vec3 &center) : Object(material), radius(radius),
+    Sphere(const Material *material, double radius, const vec3 &center) : Object(material), radius(radius),
                                                                           center(center) {}
 
     void intersect(Ray &ray) override;

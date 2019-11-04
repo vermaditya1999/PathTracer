@@ -1,17 +1,17 @@
 #include <iostream>
 #include "Ray.h"
 
-bool Ray::intersected() {
-    return intersectedObject != nullptr;
+bool Ray::isect() {
+    return isectObj != nullptr;
 }
 
-Object *Ray::getIntersectedObject() {
-    return intersectedObject;
+Object *Ray::getIsectObj() {
+    return isectObj;
 }
 
-void Ray::setParameter(Object *object, vec3 _normal, double _t) {
-    if (_t > 0 && (!intersected() || _t < t)) {
-        intersectedObject = object;
+void Ray::setParam(Object *object, vec3 _normal, double _t) {
+    if (_t > 0 && (!isect() || _t < t)) {
+        isectObj = object;
         normal = _normal;
         t = _t;
     }
@@ -21,14 +21,14 @@ const vec3 &Ray::getOrigin() const {
     return origin;
 }
 
-const vec3 &Ray::getDirection() const {
-    return direction;
+const vec3 &Ray::getDir() const {
+    return dir;
 }
 
 vec3 Ray::getNormal() {
     return normal;
 }
 
-vec3 Ray::getIntersectedPoint() {
-    return origin + direction * t;
+vec3 Ray::getIsectPt() {
+    return origin + dir * t;
 }

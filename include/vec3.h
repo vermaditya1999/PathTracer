@@ -12,7 +12,7 @@ public:
 
     explicit vec3(double value) : x(value), y(value), z(value) {}
 
-    explicit vec3(double _x, double _y, double _z) : x(_x), y(_y), z(_z) {}
+    explicit vec3(double x, double y, double z) : x(x), y(y), z(z) {}
 
     static inline double dot(const vec3 &a, const vec3 &b);
     static inline vec3 cross(const vec3 &a, const vec3 &b);

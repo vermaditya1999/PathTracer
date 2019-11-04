@@ -1,4 +1,8 @@
 #include <SimpleCamera.h>
+#include <Dielectric.h>
+#include <Shiny.h>
+#include <Glossy.h>
+#include <Diffused.h>
 #include "SimpleRenderer.h"
 
 /*
@@ -15,105 +19,174 @@ Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     }
 
     auto &objects = scene.getObjects();
-
     for (auto &object: objects) {
         object->intersect(ray);
     }
-
-    if (!ray.intersected()) {
+    if (!ray.isect()) {
         return scene.getBackgroundColor();
     }
 
-    Camera *camera = scene.getCamera();
-    auto &lights = scene.getLights();
-
     vec3 normal = ray.getNormal();
-    vec3 intersectionPoint = ray.getIntersectedPoint();
-    vec3 incident = ray.getDirection();
+    vec3 isecPt = ray.getIsectPt();
+    vec3 incident = ray.getDir();
 
-    Material mat = ray.getIntersectedObject()->getMaterial();
-    double ka = mat.ka;
-    double kd = mat.kd;
-    double ks = mat.ks;
-    double alpha = mat.alpha;
-    bool dielectric = mat.dielectric;
-    double eta = mat.eta;
+    const Material *material = ray.getIsectObj()->getMaterial();
 
     Color shade;
+    switch (material->type) {
+        case Material::Type::SHINY: {
+            Camera *camera = scene.getCamera();
+            auto &lights = scene.getLights();
 
-    if (!dielectric) {
-        vec3 viewDir = (camera->getPosition() - intersectionPoint).normalize();
-        for (auto light : lights) {
+            double ka = ((Shiny *) material)->ka;
+            double ks = ((Shiny *) material)->ks;
+            double alpha = ((Shiny *) material)->alpha;
 
-            vec3 lightDir = (light->getPosition() - intersectionPoint).normalize();
-            vec3 reflectedDirection = (2 * vec3::dot(lightDir, normal) * normal - lightDir).normalize();
+            vec3 viewDir = (camera->getPosition() - isecPt).normalize();
 
-            // Check for shadows
-            Ray shadowFeeler(intersectionPoint + lightDir * EPS, lightDir);
-            bool shadow = false;
-            double lightDistance = (light->getPosition() - intersectionPoint).length();
-            for (auto object : objects) {
-                object->intersect(shadowFeeler);
-                if (shadowFeeler.intersected() &&
-                    (shadowFeeler.getIntersectedPoint() - intersectionPoint).length() < lightDistance) {
-                    shadow = true;
-                    break;
+            for (auto light : lights) {
+                vec3 lightDir = (light->getPosition() - isecPt).normalize();
+                vec3 reflDir = (2 * vec3::dot(lightDir, normal) * normal - lightDir).normalize();
+
+                // Check for shadows
+                Ray shadowFeeler(isecPt + lightDir * EPS, lightDir);
+                bool shadowed = false;
+                double lightDist = (light->getPosition() - isecPt).length();
+                for (auto object : objects) {
+                    object->intersect(shadowFeeler);
+                    if (shadowFeeler.isect() &&
+                        (shadowFeeler.getIsectPt() - isecPt).length() < lightDist) {
+                        shadowed = true;
+                        break;
+                    }
+                }
+
+                if (!shadowed) {
+                    // Specular
+                    shade += ks * light->getColor() *
+                             std::max(pow(vec3::dot(reflDir, viewDir), alpha), 0.0);
                 }
             }
 
-            if (!shadow) {
-                // Diffused
-                shade += kd * light->getColor() * std::max(vec3::dot(lightDir, normal), 0.0);
-
-                // Specular
-                shade +=
-                        ks * light->getColor() *
-                        std::max(pow(vec3::dot(reflectedDirection, viewDir), alpha), 0.0);
-            }
+            shade += Color(ka);  // Ambient component
         }
+            break;
+        case Material::Type::GLOSSY: {
+            Camera *camera = scene.getCamera();
+            auto &lights = scene.getLights();
 
-        shade += Color(ka);
-        shade = mat.color * shade.clamp();
-    }
+            double ka = ((Glossy *) material)->ka;
+            double kd = ((Glossy *) material)->kd;
+            double ks = ((Glossy *) material)->ks;
+            double alpha = ((Glossy *) material)->alpha;
 
-    if (dielectric) {
-        double R;
-        vec3 reflectDir, refractDir;
-        Color reflectCol, refractCol;
+            vec3 viewDir = (camera->getPosition() - isecPt).normalize();
 
-        if (vec3::dot(incident, normal) < 0) {
-            // Ray is going in the object
-            reflectDir = reflect(incident, normal);
-            refractDir = refract(incident, normal, 1.0, eta);
+            for (auto light : lights) {
+                vec3 lightDir = (light->getPosition() - isecPt).normalize();
+                vec3 reflDir = (2 * vec3::dot(lightDir, normal) * normal - lightDir).normalize();
 
-            Ray reflectRay(intersectionPoint + reflectDir * EPS, reflectDir);
-            Ray refractRay(intersectionPoint + refractDir * EPS, refractDir);
+                // Check for shadows
+                Ray shadowFeeler(isecPt + lightDir * EPS, lightDir);
+                bool shadow = false;
+                double lightDist = (light->getPosition() - isecPt).length();
+                for (auto object : objects) {
+                    object->intersect(shadowFeeler);
+                    if (shadowFeeler.isect() &&
+                        (shadowFeeler.getIsectPt() - isecPt).length() < lightDist) {
+                        shadow = true;
+                        break;
+                    }
+                }
 
-            reflectCol = tracePath(reflectRay, depth - 1, scene);
-            refractCol = tracePath(refractRay, depth - 1, scene);
+                if (!shadow) {
+                    // Diffused
+                    shade += kd * light->getColor() * std::max(vec3::dot(lightDir, normal), 0.0);
 
-            R = reflectance(incident, normal, 1.0, eta);
-        } else {
-            // Ray is going out from the object
-            reflectDir = reflect(incident, -normal);
-            refractDir = refract(incident, -normal, eta, 1.0);
+                    // Specular
+                    shade +=
+                            ks * light->getColor() *
+                            std::max(pow(vec3::dot(reflDir, viewDir), alpha), 0.0);
+                }
+            }
 
-            if (refractDir.length() <= EPS) {
-                // Total Internal Reflection
-                Ray reflectRay(intersectionPoint + reflectDir * EPS, reflectDir);
+            shade += Color(ka);  // Ambient component
+        }
+            break;
+        case Material::Type::DIFFUSED: {
+            Camera *camera = scene.getCamera();
+            auto &lights = scene.getLights();
+
+            double ka = ((Diffused *) material)->ka;
+            double kd = ((Diffused *) material)->kd;
+
+            for (auto light : lights) {
+                vec3 lightDir = (light->getPosition() - isecPt).normalize();
+
+                // Check for shadows
+                Ray shadowFeeler(isecPt + lightDir * EPS, lightDir);
+                bool shadow = false;
+                double lightDistance = (light->getPosition() - isecPt).length();
+                for (auto object : objects) {
+                    object->intersect(shadowFeeler);
+                    if (shadowFeeler.isect() &&
+                        (shadowFeeler.getIsectPt() - isecPt).length() < lightDistance) {
+                        shadow = true;
+                        break;
+                    }
+                }
+
+                if (!shadow) {
+                    // Diffused
+                    shade += kd * light->getColor() * std::max(vec3::dot(lightDir, normal), 0.0);
+                }
+            }
+
+            shade += Color(ka);  // Ambient component
+        }
+            break;
+        case Material::Type::DIELECTRIC: {
+            double eta = ((Dielectric *) material)->eta;
+            double R;
+            vec3 reflectDir, refractDir;
+            Color reflectCol, refractCol;
+
+            if (vec3::dot(incident, normal) < 0) {
+                // Ray is going in the object
+                reflectDir = reflect(incident, normal);
+                refractDir = refract(incident, normal, 1.0, eta);
+
+                Ray reflectRay(isecPt + reflectDir * EPS, reflectDir);
+                Ray refractRay(isecPt + refractDir * EPS, refractDir);
+
                 reflectCol = tracePath(reflectRay, depth - 1, scene);
-            } else {
-                // Only Refraction
-                Ray refractRay(intersectionPoint + refractDir * EPS, refractDir);
                 refractCol = tracePath(refractRay, depth - 1, scene);
+
+                R = reflectance(incident, normal, 1.0, eta);
+            } else {
+                // Ray is going out from the object
+                reflectDir = reflect(incident, -normal);
+                refractDir = refract(incident, -normal, eta, 1.0);
+
+                if (refractDir.length() <= EPS) {
+                    // Total Internal Reflection
+                    Ray reflectRay(isecPt + reflectDir * EPS, reflectDir);
+                    reflectCol = tracePath(reflectRay, depth - 1, scene);
+                } else {
+                    // Only Refraction
+                    Ray refractRay(isecPt + refractDir * EPS, refractDir);
+                    refractCol = tracePath(refractRay, depth - 1, scene);
+                }
+
+                R = reflectance(incident, -normal, eta, 1.0);
             }
 
-            R = reflectance(incident, -normal, eta, 1.0);
+            shade += R * reflectCol + (1 - R) * refractCol;
         }
-
-        shade += R * reflectCol + (1 - R) * refractCol;
-        shade.clamp();
+            break;
     }
+
+    shade = material->color * shade.clamp();
 
     return shade;
 }
