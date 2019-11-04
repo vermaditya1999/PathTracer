@@ -10,11 +10,13 @@ public:
     double kd;
     double ks;
     double alpha;
-    bool reflective;
+    bool dielectric;
+    double eta;
 
-    explicit Material(const Color &color, double ka, double kd, double ks, double alpha, bool reflective = false)
+    explicit Material(const Color &color, double ka, double kd, double ks, double alpha, bool dielectric = false,
+                      double eta = 0)
             : color(color), ka(ka), kd(kd),
-              ks(ks), alpha(alpha), reflective(reflective) {}
+              ks(ks), alpha(alpha), dielectric(dielectric), eta(eta) {}
 };
 
 #endif

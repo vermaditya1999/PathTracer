@@ -15,7 +15,7 @@ private:
     vec3 normal;
 
 public:
-    explicit Ray(const vec3 _origin, const vec3 _direction, double _t) :
+    explicit Ray(const vec3 _origin, const vec3 _direction, double _t = 0) :
             origin(_origin), direction(_direction), t(_t), intersectedObject(nullptr), normal(0) {}
 
     const vec3 &getOrigin() const;
