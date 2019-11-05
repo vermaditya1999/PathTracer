@@ -18,7 +18,7 @@ private:
 
     static double reflectance(const vec3 &incident, const vec3 &normal, double n1, double n2);
 
-    static vec3 rndHemiDir(const vec3 &normal);
+    static vec3 rndHemisphereDir(const vec3 &normal);
 
 public:
     void render(Scene scene) override;

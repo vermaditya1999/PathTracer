@@ -38,9 +38,9 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
         }
             break;
         case Material::Type::DIFFUSED: {
-            vec3 randomDir = rndHemiDir(normal);
-            Ray randomRay(isecPt + randomDir * EPS, randomDir);
-            shade += tracePath(randomRay, depth - 1, scene);
+            vec3 rndDir = rndHemisphereDir(normal);
+            Ray rndRay(isecPt + rndDir * EPS, rndDir);
+            shade += tracePath(rndRay, depth - 1, scene);
         }
             break;
         case Material::Type::DIELECTRIC: {
@@ -84,14 +84,7 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
             break;
     }
 
-//    if (ray.getIsectObj()->OBJ_ID == 2) {
-//        debug("ID: %d, Shade: <%.2f, %.2f, %.2f>, HP: <%.2f, %.2f, %.2f>", ray.getIsectObj()->OBJ_ID,
-//              shade.r, shade.g, shade.b, isecPt.x, isecPt.y, isecPt.z);
-//    }
-
-    shade.clamp();
     shade = material->emission + shade * material->color;
-    shade.clamp();
 
     return shade;
 }
@@ -102,19 +95,26 @@ void RealisticRenderer::render(Scene scene) {
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
 
+    int jitterGridSize = 1;
+    int numSamp = 1;
+    double totSamp = numSamp * height * width * jitterGridSize;
+    double compSamp = 0;
+
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color shade;
-            int jitterGridSize = 2;
             for (int gridI = 0; gridI < jitterGridSize; ++gridI) {
                 for (int gridJ = 0; gridJ < jitterGridSize; ++gridJ) {
-                    for (int ns = 0; ns < 10; ++ns) {
+                    for (int ns = 0; ns < numSamp; ++ns) {
                         Ray ray = camera->getRay(i, j, gridI, gridJ, jitterGridSize);
                         shade += tracePath(ray, 8, scene);
+                        ++compSamp;
                     }
+                    shade /= numSamp;
                 }
             }
-            camera->shadePixel(i, j, shade / (jitterGridSize * jitterGridSize));
+            std::cout << "\rProgress: " << (compSamp / totSamp) * 100 << "%" << std::flush;
+            camera->shadePixel(i, j, shade.clamp() / (jitterGridSize * jitterGridSize));
         }
     }
 
@@ -159,25 +159,32 @@ double RealisticRenderer::reflectance(const vec3 &incident, const vec3 &normal, 
     return R0 + (1 - R0) * pow(1.0 - cosI, 5);
 }
 
-vec3 RealisticRenderer::rndHemiDir(const vec3 &normal) {
+vec3 RealisticRenderer::rndHemisphereDir(const vec3 &normal) {
     // Create an axis (u, v, w) with w oriented along normal
-    vec3 w = normal;
-    vec3 u = vec3::cross(normal, vec3(normal.x, -normal.y, normal.z));
-    vec3 v = vec3::cross(w, u);
+    vec3 u, v, w;
+
+    w = normal;
+    if (fabs(normal.x) > EPS) {
+        u = vec3(0, 0, 1);
+    } else {
+        u = vec3(1, 0, 0);
+    }
+    v = vec3::cross(w, u);
 
     // Create random unit vector in spherical coordinates
+    // Reference: Realistic Ray Tracing
     double r1 = drand48();
     double r2 = drand48();
 
-    double cost = sqrt(1 - r1);
+    double sint = sqrt(r1);
     double phi = 2 * M_PI * r2;
 
-    double sint = sqrt(r1);
+    double cost = sqrt(1 - r1);
     double cosp = cos(phi);
     double sinp = sin(phi);
 
-    // Map the spherical coordinates to (u, v, w) axis
-    vec3 localVec = (cosp * sint * u) + (sinp * sint) * v + cost * w;
+    // Map the spherical coordinates to world axis
+    vec3 localVec = ((cosp * sint * u) + (sinp * sint * v) + (cost * w)).normalize();
 
-    return localVec.normalize();
+    return localVec;
 }
