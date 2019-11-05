@@ -61,7 +61,7 @@ int main(int argc , char *argv[])
 
     // Light
     Sphere *sphere1 = new Sphere(new Diffused(Color(1), Color(1.0), 0.8, 0.1),
-                                 125, vec3(-400, 320, -2900));
+                                 250, vec3(0, 550, -2600));
     scene.addObject(sphere1);
 
     Sphere *sphere2 = new Sphere(new Diffused(Color(0.5, 0.5, 0.5), Color(0), 0.8, 0.1),
