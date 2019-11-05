@@ -20,7 +20,7 @@ public:
             e(_e), g(_g), t(_t), image(imageHeight, imageWidth) {
         createAxis();
         focalDistance = imageHeight / (2.0 * tan(verticalFov * M_PI / 360.0));
-        debug("Focal Distance: %f", focalDistance);
+//        debug("Focal Distance: %f", focalDistance);
     }
 
     int getImageHeight() const {

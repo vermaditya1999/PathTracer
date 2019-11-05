@@ -100,6 +100,7 @@ void RealisticRenderer::render(Scene scene) {
     double totSamp = numSamp * height * width * jitterGridSize;
     double compSamp = 0;
 
+    fprintf(stderr, "\r Progress: [ %5.2f% ]", (compSamp / totSamp) * 100);
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color shade;
@@ -113,11 +114,13 @@ void RealisticRenderer::render(Scene scene) {
                     shade /= numSamp;
                 }
             }
-            std::cout << "\rProgress: " << (compSamp / totSamp) * 100 << "%" << std::flush;
+
+            fprintf(stderr, "\r Progress: [ %5.2f% ]", (compSamp / totSamp) * 100);
             camera->shadePixel(i, j, shade.clamp() / (jitterGridSize * jitterGridSize));
         }
     }
 
+    fprintf(stderr, "\n");
     camera->saveFile("image");
 }
 
