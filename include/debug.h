@@ -8,7 +8,7 @@
 #define debug(fmt , ...) do {\
     fprintf(stderr , "[%s:%s():%d] ", __FILE__ , __func__ , __LINE__  );\
     fprintf(stderr , fmt , __VA_ARGS__); \
-    puts(""); \
+    fputs("\n", stderr); \
 }while(0)
 #else
 #define debug(fmt , ...)

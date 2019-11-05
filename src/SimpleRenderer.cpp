@@ -163,7 +163,7 @@ void SimpleRenderer::render(Scene scene) {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color shade;
-            int jitterGridSize = 1;
+            int jitterGridSize = 8;
             for (int gridI = 0; gridI < jitterGridSize; ++gridI) {
                 for (int gridJ = 0; gridJ < jitterGridSize; ++gridJ) {
                     Ray ray = camera->getRay(i, j, gridI, gridJ, jitterGridSize);

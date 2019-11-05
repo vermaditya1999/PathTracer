@@ -34,9 +34,13 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     Color shade;
     switch (material->type) {
         case Material::Type::GLOSSY: {
+
         }
             break;
         case Material::Type::DIFFUSED: {
+            vec3 randomDir = rndHemiDir(normal);
+            Ray randomRay(isecPt + randomDir * EPS, randomDir);
+            shade += tracePath(randomRay, depth - 1, scene);
         }
             break;
         case Material::Type::DIELECTRIC: {
@@ -80,8 +84,14 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
             break;
     }
 
+//    if (ray.getIsectObj()->OBJ_ID == 2) {
+//        debug("ID: %d, Shade: <%.2f, %.2f, %.2f>, HP: <%.2f, %.2f, %.2f>", ray.getIsectObj()->OBJ_ID,
+//              shade.r, shade.g, shade.b, isecPt.x, isecPt.y, isecPt.z);
+//    }
+
     shade.clamp();
-    shade *= material->color;
+    shade = material->emission + shade * material->color;
+    shade.clamp();
 
     return shade;
 }
@@ -95,11 +105,13 @@ void RealisticRenderer::render(Scene scene) {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color shade;
-            int jitterGridSize = 4;
+            int jitterGridSize = 2;
             for (int gridI = 0; gridI < jitterGridSize; ++gridI) {
                 for (int gridJ = 0; gridJ < jitterGridSize; ++gridJ) {
-                    Ray ray = camera->getRay(i, j, gridI, gridJ, jitterGridSize);
-                    shade += tracePath(ray, 8, scene);
+                    for (int ns = 0; ns < 10; ++ns) {
+                        Ray ray = camera->getRay(i, j, gridI, gridJ, jitterGridSize);
+                        shade += tracePath(ray, 8, scene);
+                    }
                 }
             }
             camera->shadePixel(i, j, shade / (jitterGridSize * jitterGridSize));
@@ -147,22 +159,25 @@ double RealisticRenderer::reflectance(const vec3 &incident, const vec3 &normal, 
     return R0 + (1 - R0) * pow(1.0 - cosI, 5);
 }
 
-vec3 rndHemiDir(const vec3 &normal) {
-    // Create an axis (u, v, w) with v oriented along normal
-    vec3 v = normal;
-    vec3 u = vec3::cross(normal, vec3(normal.z, -normal.y, normal.x));
-    vec3 w = vec3::cross(u, v);
+vec3 RealisticRenderer::rndHemiDir(const vec3 &normal) {
+    // Create an axis (u, v, w) with w oriented along normal
+    vec3 w = normal;
+    vec3 u = vec3::cross(normal, vec3(normal.x, -normal.y, normal.z));
+    vec3 v = vec3::cross(w, u);
 
     // Create random unit vector in spherical coordinates
-    double theta = drand48() * M_PI_2;
-    double phi = drand48() * M_PI;
+    double r1 = drand48();
+    double r2 = drand48();
+
+    double cost = sqrt(1 - r1);
+    double phi = 2 * M_PI * r2;
+
+    double sint = sqrt(r1);
+    double cosp = cos(phi);
+    double sinp = sin(phi);
 
     // Map the spherical coordinates to (u, v, w) axis
-    // TODO: Make this efficient
-    vec3 localVec(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
+    vec3 localVec = (cosp * sint * u) + (sinp * sint) * v + cost * w;
 
-    // Transform (u, v, w) to (x, y, z) axis
-//    vec3 globalVec = localVec * ;
-
-//    return globalVec;
+    return localVec.normalize();
 }
