@@ -6,17 +6,17 @@
 class Material {
 public:
     enum class Type {
-        SHINY,
         GLOSSY,
         DIFFUSED,
         DIELECTRIC
     };
 
     Color color;
+    Color emission;
     Type type;
 
-    explicit Material(const Color &color, Material::Type type)
-            : color(color), type(type) {}
+    explicit Material(const Color &color, const Color &emission, Material::Type type)
+            : color(color), emission(emission), type(type) {}
 };
 
 #endif

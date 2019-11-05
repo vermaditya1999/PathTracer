@@ -2,8 +2,8 @@
 #define PATHTRACER_SCENE_H
 
 #include <vector>
-#include "Object.h"
-#include "Camera.h"
+#include "geometry/Object.h"
+#include "camera/Camera.h"
 #include "Light.h"
 
 class Scene {

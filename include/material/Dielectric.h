@@ -7,8 +7,8 @@ class Dielectric : public Material {
 public:
     double eta;
 
-    explicit Dielectric(const Color &color, double eta) :
-            Material(color, Material::Type::DIELECTRIC), eta(eta) {}
+    explicit Dielectric(const Color &color, const Color &emission, double eta) :
+            Material(color, emission, Material::Type::DIELECTRIC), eta(eta) {}
 };
 
 #endif //PATHTRACER_DIELECTRIC_H

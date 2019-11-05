@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "camera/Camera.h"
 
 void Camera::createAxis() {
     w = -g / g.length();

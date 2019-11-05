@@ -1,4 +1,4 @@
-#include "SimpleCamera.h"
+#include "camera/SimpleCamera.h"
 
 Ray SimpleCamera::getRay(int row, int col) const {
     vec3 origin = w * -focalDistance +

@@ -8,8 +8,8 @@ public:
     double kd;
     double ka;
 
-    explicit Diffused(const Color &color, double kd, double ka) :
-            Material(color, Material::Type::DIFFUSED), kd(kd), ka(ka) {}
+    explicit Diffused(const Color &color, const Color &emission, double kd, double ka) :
+            Material(color, emission, Material::Type::DIFFUSED), kd(kd), ka(ka) {}
 };
 
 #endif //PATHTRACER_DIFFUSED_H

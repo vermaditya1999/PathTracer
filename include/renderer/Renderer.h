@@ -2,7 +2,7 @@
 #define PATHTRACER_RENDERER_H
 
 #include "Scene.h"
-#include "Ray.h"
+#include "geometry/Ray.h"
 
 class Renderer {
 public:

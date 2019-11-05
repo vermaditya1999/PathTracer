@@ -22,22 +22,22 @@ public:
 
     const vec3 &getDir() const;
 
-    // Returns true if ray has intersected an object.
+    // Returns true if ray has intersected an geometry.
     bool isect();
 
-    // Returns the pointer to the intersected object.
-    // Returns nullptr if ray has not intersected any object until now.
+    // Returns the pointer to the intersected geometry.
+    // Returns nullptr if ray has not intersected any geometry until now.
     Object *getIsectObj();
 
-    // Returns the normal to the object at the point of intersection.
-    // Returns a null vector if ray has not intersected any object until now.
+    // Returns the normal to the geometry at the point of intersection.
+    // Returns a null vector if ray has not intersected any geometry until now.
     vec3 getNormal();
 
     // Returns the point of intersection.
-    // Returns null vector if ray has not intersected any object until now.
+    // Returns null vector if ray has not intersected any geometry until now.
     vec3 getIsectPt();
 
-    // Set the ray parameter and intersected object if this is the
+    // Set the ray parameter and intersected geometry if this is the
     // closest hit in the positive dir of ray.
     void setParam(Object *object, vec3 _normal, double _t);
 };

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Ray.h"
+#include "geometry/Ray.h"
 
 bool Ray::isect() {
     return isectObj != nullptr;

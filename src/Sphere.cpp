@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "Sphere.h"
+#include "geometry/Sphere.h"
 #include "vec3.h"
 
 void Sphere::intersect(Ray &ray) {

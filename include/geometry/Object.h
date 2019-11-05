@@ -3,7 +3,7 @@
 
 #include "vec3.h"
 #include "Ray.h"
-#include "Material.h"
+#include "material/Material.h"
 
 class Ray;
 

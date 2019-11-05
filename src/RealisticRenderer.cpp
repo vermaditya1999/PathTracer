@@ -2,7 +2,7 @@
 #include <material/Dielectric.h>
 #include <material/Glossy.h>
 #include <material/Diffused.h>
-#include "renderer/SimpleRenderer.h"
+#include "renderer/RealisticRenderer.h"
 
 /*
  * Check the intersection of ray with objects in the scene and
@@ -12,7 +12,7 @@
  *          Dielectric Reflection and Refraction using Schlick's
  *          approximation for Fresnel's equations.
  * */
-Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
+Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     if (depth <= 0) {
         return scene.getBackgroundColor();
     }
@@ -34,77 +34,9 @@ Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     Color shade;
     switch (material->type) {
         case Material::Type::GLOSSY: {
-            Camera *camera = scene.getCamera();
-            auto &lights = scene.getLights();
-
-            double ka = ((Glossy *) material)->ka;
-            double kd = ((Glossy *) material)->kd;
-            double ks = ((Glossy *) material)->ks;
-            double alpha = ((Glossy *) material)->alpha;
-
-            vec3 viewDir = (camera->getPosition() - isecPt).normalize();
-
-            for (auto light : lights) {
-                vec3 lightDir = (light->getPosition() - isecPt).normalize();
-                vec3 reflDir = (2 * vec3::dot(lightDir, normal) * normal - lightDir).normalize();
-
-                // Check for shadows
-                Ray shadowFeeler(isecPt + lightDir * EPS, lightDir);
-                bool shadow = false;
-                double lightDist = (light->getPosition() - isecPt).length();
-                for (auto object : objects) {
-                    object->intersect(shadowFeeler);
-                    if (shadowFeeler.isect() &&
-                        (shadowFeeler.getIsectPt() - isecPt).length() < lightDist) {
-                        shadow = true;
-                        break;
-                    }
-                }
-
-                if (!shadow) {
-                    // Diffused
-                    shade += kd * light->getColor() * std::max(vec3::dot(lightDir, normal), 0.0);
-
-                    // Specular
-                    shade +=
-                            ks * light->getColor() *
-                            std::max(pow(vec3::dot(reflDir, viewDir), alpha), 0.0);
-                }
-            }
-
-            shade += Color(ka);  // Ambient component
         }
             break;
         case Material::Type::DIFFUSED: {
-            Camera *camera = scene.getCamera();
-            auto &lights = scene.getLights();
-
-            double ka = ((Diffused *) material)->ka;
-            double kd = ((Diffused *) material)->kd;
-
-            for (auto light : lights) {
-                vec3 lightDir = (light->getPosition() - isecPt).normalize();
-
-                // Check for shadows
-                Ray shadowFeeler(isecPt + lightDir * EPS, lightDir);
-                bool shadow = false;
-                double lightDistance = (light->getPosition() - isecPt).length();
-                for (auto object : objects) {
-                    object->intersect(shadowFeeler);
-                    if (shadowFeeler.isect() &&
-                        (shadowFeeler.getIsectPt() - isecPt).length() < lightDistance) {
-                        shadow = true;
-                        break;
-                    }
-                }
-
-                if (!shadow) {
-                    // Diffused
-                    shade += kd * light->getColor() * std::max(vec3::dot(lightDir, normal), 0.0);
-                }
-            }
-
-            shade += Color(ka);  // Ambient component
         }
             break;
         case Material::Type::DIELECTRIC: {
@@ -154,7 +86,7 @@ Color SimpleRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     return shade;
 }
 
-void SimpleRenderer::render(Scene scene) {
+void RealisticRenderer::render(Scene scene) {
     Camera *camera = scene.getCamera();
 
     int height = camera->getImageHeight();
@@ -163,7 +95,7 @@ void SimpleRenderer::render(Scene scene) {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color shade;
-            int jitterGridSize = 1;
+            int jitterGridSize = 4;
             for (int gridI = 0; gridI < jitterGridSize; ++gridI) {
                 for (int gridJ = 0; gridJ < jitterGridSize; ++gridJ) {
                     Ray ray = camera->getRay(i, j, gridI, gridJ, jitterGridSize);
@@ -177,11 +109,11 @@ void SimpleRenderer::render(Scene scene) {
     camera->saveFile("image");
 }
 
-vec3 SimpleRenderer::reflect(const vec3 &incident, const vec3 &normal) {
+vec3 RealisticRenderer::reflect(const vec3 &incident, const vec3 &normal) {
     return incident - 2.0 * vec3::dot(incident, normal) * normal;
 }
 
-vec3 SimpleRenderer::refract(const vec3 &incident, const vec3 &normal, double n1, double n2) {
+vec3 RealisticRenderer::refract(const vec3 &incident, const vec3 &normal, double n1, double n2) {
     double n = n1 / n2;
 
     double cosI = -vec3::dot(incident, normal);
@@ -195,7 +127,7 @@ vec3 SimpleRenderer::refract(const vec3 &incident, const vec3 &normal, double n1
     return n * incident + (n * cosI - sqrt(1 - sin2T)) * normal;
 }
 
-double SimpleRenderer::reflectance(const vec3 &incident, const vec3 &normal, double n1, double n2) {
+double RealisticRenderer::reflectance(const vec3 &incident, const vec3 &normal, double n1, double n2) {
     double R0 = pow((n1 - n2) / (n1 + n2), 2);
 
     double cosI = -vec3::dot(incident, normal);
@@ -213,4 +145,24 @@ double SimpleRenderer::reflectance(const vec3 &incident, const vec3 &normal, dou
     }
 
     return R0 + (1 - R0) * pow(1.0 - cosI, 5);
+}
+
+vec3 rndHemiDir(const vec3 &normal) {
+    // Create an axis (u, v, w) with v oriented along normal
+    vec3 v = normal;
+    vec3 u = vec3::cross(normal, vec3(normal.z, -normal.y, normal.x));
+    vec3 w = vec3::cross(u, v);
+
+    // Create random unit vector in spherical coordinates
+    double theta = drand48() * M_PI_2;
+    double phi = drand48() * M_PI;
+
+    // Map the spherical coordinates to (u, v, w) axis
+    // TODO: Make this efficient
+    vec3 localVec(sin(theta) * cos(phi), cos(theta), sin(theta) * sin(phi));
+
+    // Transform (u, v, w) to (x, y, z) axis
+//    vec3 globalVec = localVec * ;
+
+//    return globalVec;
 }

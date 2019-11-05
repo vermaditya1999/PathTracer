@@ -3,7 +3,7 @@
 
 #include "vec3.h"
 #include "Image.h"
-#include "Ray.h"
+#include "geometry/Ray.h"
 
 class Camera {
 protected:

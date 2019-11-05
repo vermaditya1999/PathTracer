@@ -1,4 +1,4 @@
-#include "Triangle.h"
+#include "geometry/Triangle.h"
 
 void Triangle::intersect(Ray &ray) {
     vec3 origin = ray.getOrigin();
