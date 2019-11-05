@@ -5,6 +5,8 @@
 #include <Rectangle.h>
 #include <Diffused.h>
 #include <Dielectric.h>
+#include <Shiny.h>
+#include <Glossy.h>
 #include "Options.h"
 
 int main(int argc , char *argv[])
@@ -58,15 +60,23 @@ int main(int argc , char *argv[])
                                         vec3(485, 485, 0));
     scene.addObject(backWall);
 
-    Sphere *sphere1 = new Sphere(new Dielectric(Color(1.0, 1.0, 1.0), 1.5),
+//    Sphere *sphere1 = new Sphere(new Dielectric(Color(1.0, 1.0, 1.0), 1.5),
+//                                 125, vec3(-170, -250, -2300));
+//    scene.addObject(sphere1);
+
+    Sphere *sphere1 = new Sphere(new Diffused(Color(0.8, 0.4, 0.6), 0.8, 0.1),
                                  125, vec3(-170, -250, -2300));
     scene.addObject(sphere1);
 
-    Sphere *sphere2 = new Sphere(new Dielectric(Color(1.0, 1.0, 1.0), 1.5),
+//    Sphere *sphere2 = new Sphere(new Dielectric(Color(1.0, 1.0, 1.0), 1.5),
+//                                 125, vec3(170, -275, -1950));
+//    scene.addObject(sphere2);
+
+    Sphere *sphere2 = new Sphere(new Glossy(Color(0.2, 0.6, 0.8), 0.4, 0.4, 0.1, 16),
                                  125, vec3(170, -275, -1950));
     scene.addObject(sphere2);
 
-    Sphere *sphere3 = new Sphere(new Dielectric(Color(1.0, 1.0, 1.0), 1.01),
+    Sphere *sphere3 = new Sphere(new Dielectric(Color(1.0, 1.0, 1.0), 1.7),
                                  125, vec3(0, -275, -1600));
     scene.addObject(sphere3);
 

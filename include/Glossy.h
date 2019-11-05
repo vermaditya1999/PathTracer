@@ -10,7 +10,7 @@ public:
     double ka;
     double alpha;
 
-    explicit Glossy(const Color &color, double ks, double kd, double ka) :
+    explicit Glossy(const Color &color, double ks, double kd, double ka, double alpha) :
             Material(color, Material::Type::GLOSSY), ks(ks), kd(kd), ka(ka), alpha(alpha) {}
 };
 
