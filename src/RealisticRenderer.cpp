@@ -4,6 +4,8 @@
 #include <material/Diffused.h>
 #include "renderer/RealisticRenderer.h"
 
+using ull = unsigned long long;
+
 /*
  * Check the intersection of ray with objects in the scene and
  * return the shade color.
@@ -95,12 +97,12 @@ void RealisticRenderer::render(Scene scene) {
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
 
-    int jitterGridSize = 1;
-    int numSamp = 1;
-    double totSamp = numSamp * height * width * jitterGridSize;
-    double compSamp = 0;
+    ull jitterGridSize = 2;
+    ull numSamp = 1500;
+    ull totSamp = numSamp * height * width * jitterGridSize * jitterGridSize;
+    ull compSamp = 0;
 
-    fprintf(stderr, "\rProgress: %5.2f%%", (compSamp / totSamp) * 100);
+    fprintf(stderr, "\rProgress: %5.2Lf%%", ((long double)compSamp / totSamp) * 100);
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color shade;
@@ -114,8 +116,7 @@ void RealisticRenderer::render(Scene scene) {
                     shade /= numSamp;
                 }
             }
-
-            fprintf(stderr, "\rProgress: %5.2f%%", (compSamp / totSamp) * 100);
+    		fprintf(stderr, "\rProgress: %5.2Lf%%", ((long double)compSamp / totSamp) * 100);
             camera->shadePixel(i, j, shade.clamp() / (jitterGridSize * jitterGridSize));
         }
     }
