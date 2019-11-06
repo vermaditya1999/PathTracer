@@ -111,7 +111,7 @@ void RealisticRenderer::render(Scene scene) {
     int width = camera->getImageWidth();
 
     ull jg_size = 2;  // Jitter grid size
-    ull n_samples = 100;  // Number of samples
+    ull n_samples = 10;  // Number of samples
     ull t_samples = n_samples * height * width * jg_size * jg_size;  // Total samples
     ull c_samples = 0;  // Completed samples
 
@@ -119,10 +119,10 @@ void RealisticRenderer::render(Scene scene) {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color pix_shade;
-            for (int grid_i = 0; grid_i < jg_size; ++grid_i) {
-                for (int grid_j = 0; grid_j < jg_size; ++grid_j) {
+            for (size_t grid_i = 0; grid_i < jg_size; ++grid_i) {
+                for (size_t grid_j = 0; grid_j < jg_size; ++grid_j) {
                 	Color cur_shade;
-                    for (int ns = 0; ns < n_samples; ++ns) {
+                    for (size_t ns = 0; ns < n_samples; ++ns) {
                         Ray ray = camera->getRay(i, j, grid_i, grid_j, jg_size);
                         cur_shade += tracePath(ray, 8, scene);
                         ++c_samples;
@@ -186,9 +186,9 @@ vec3 RealisticRenderer::rndHemisphereDir(const vec3 &normal) {
 
     w = normal;
     if (fabs(normal.x) > EPS) {
-        u = vec3(0, 0, 1);
+        u = vec3::cross(vec3(0, 0, 1), w);
     } else {
-        u = vec3(1, 0, 0);
+        u = vec3::cross(vec3(1, 0, 0), w);
     }
     v = vec3::cross(w, u);
 
