@@ -97,27 +97,31 @@ void RealisticRenderer::render(Scene scene) {
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
 
-    ull jitterGridSize = 2;
-    ull numSamp = 1500;
-    ull totSamp = numSamp * height * width * jitterGridSize * jitterGridSize;
-    ull compSamp = 0;
+    ull jg_size = 2;  // Jitter grid size
+    ull n_samples = 10;  // Number of samples
+    ull t_samples = n_samples * height * width * jg_size * jg_size;  // Total samples
+    ull c_samples = 0;  // Completed samples
 
-    fprintf(stderr, "\rProgress: %5.2Lf%%", ((long double)compSamp / totSamp) * 100);
+    fprintf(stderr, "\rProgress: %5.2Lf%%", ((long double)c_samples / t_samples) * 100);
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
-            Color shade;
-            for (int gridI = 0; gridI < jitterGridSize; ++gridI) {
-                for (int gridJ = 0; gridJ < jitterGridSize; ++gridJ) {
-                    for (int ns = 0; ns < numSamp; ++ns) {
-                        Ray ray = camera->getRay(i, j, gridI, gridJ, jitterGridSize);
-                        shade += tracePath(ray, 8, scene);
-                        ++compSamp;
+            Color pix_shade;
+            for (int grid_i = 0; grid_i < jg_size; ++grid_i) {
+                for (int grid_j = 0; grid_j < jg_size; ++grid_j) {
+                	Color cur_shade;
+                    for (int ns = 0; ns < n_samples; ++ns) {
+                        Ray ray = camera->getRay(i, j, grid_i, grid_j, jg_size);
+                        cur_shade += tracePath(ray, 8, scene);
+                        ++c_samples;
                     }
-                    shade /= numSamp;
+                    pix_shade += cur_shade / n_samples;
                 }
             }
-    		fprintf(stderr, "\rProgress: %5.2Lf%%", ((long double)compSamp / totSamp) * 100);
-            camera->shadePixel(i, j, shade.clamp() / (jitterGridSize * jitterGridSize));
+    		fprintf(stderr, "\rProgress: %5.2Lf%%", ((long double)c_samples / t_samples) * 100);
+            
+            pix_shade /= jg_size * jg_size;
+            pix_shade.clamp();
+            camera->shadePixel(i, j, pix_shade);
         }
     }
 
