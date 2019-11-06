@@ -36,7 +36,20 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     Color shade;
     switch (material->type) {
         case Material::Type::GLOSSY: {
+            vec3 reflected = reflect(incident , normal);
+            vec3 randReflect;
+            double check;
+            int k = 15; // Make k=0 for specular surface.
+            do {
+                vec3 randReflect = rndHemisphereDir(reflected);
 
+                //debug("cos theta : %.5f" , vec3::dot(randReflect , reflected));
+                check = vec3::dot(randReflect , normal);
+            }while(check < 0.0  && !std::isnan(check)&& k-- > 0);
+            if (k <=0)
+                randReflect = reflected;
+            Ray rndRay(isecPt + reflected*EPS , reflected);
+            shade += tracePath(rndRay , depth-1  , scene);
         }
             break;
         case Material::Type::DIFFUSED: {
@@ -192,6 +205,32 @@ vec3 RealisticRenderer::rndHemisphereDir(const vec3 &normal) {
     double sinp = sin(phi);
 
     // Map the spherical coordinates to world axis
+    vec3 localVec = ((cosp * sint * u) + (sinp * sint * v) + (cost * w)).normalize();
+
+    return localVec;
+}
+
+vec3 RealisticRenderer::glossyHemsiphereDir(const vec3 &reflect , const int m) {
+    vec3 u, v, w;
+
+    w = reflect;
+    if (fabs(reflect.x) > EPS) {
+        u = vec3(0, 0, 1);
+    } else {
+        u = vec3(1, 0, 0);
+    }
+    v = vec3::cross(w, u);
+
+    double r1 = drand48();
+    double r2 = drand48();
+
+    long double cost = powf128(1-r1 , 1/(0.6+1));
+    long double cos2t = powf128(1-r1 , 2/(0.6+1));
+    long double phi = 2 * M_PI * r2;
+    long double sint = sqrt(1-cos2t);
+    long double cosp = cos(phi);
+    long double sinp = sin(phi);
+
     vec3 localVec = ((cosp * sint * u) + (sinp * sint * v) + (cost * w)).normalize();
 
     return localVec;

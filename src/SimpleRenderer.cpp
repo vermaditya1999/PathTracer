@@ -214,3 +214,4 @@ double SimpleRenderer::reflectance(const vec3 &incident, const vec3 &normal, dou
 
     return R0 + (1 - R0) * pow(1.0 - cosI, 5);
 }
+

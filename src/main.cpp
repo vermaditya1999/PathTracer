@@ -7,6 +7,8 @@
 #include <material/Dielectric.h>
 #include <renderer/RealisticRenderer.h>
 #include "Options.h"
+#include "material/Glossy.h"
+
 
 int main(int argc , char *argv[])
 {
@@ -79,11 +81,15 @@ int main(int argc , char *argv[])
                                 200, vec3(0, 200, -2500));
    scene.addObject(sphere3);
 
-   Sphere *sphere4 = new Sphere(new Diffused(Color(0.5), Color(0), 1.0, 0),
+   Sphere *sphere4 = new Sphere(new Diffused(Color(0.5), Color(0), 1.0 , 0) ,
                                 200, vec3(0, -200, -2500));
    scene.addObject(sphere4);
 
-   Rectangle *floor = new Rectangle(new Diffused(Color(0.1), Color(0), 1.0, 0),
+   Sphere *sphereG = new Sphere(new Glossy(Color(1) , Color(0) , 1.0 , 0 , 0 , 15),
+                                100 , vec3(300 , -100 , -2500));
+
+   scene.addObject(sphereG);
+   Rectangle *floor = new Rectangle(new Diffused(Color(0.6 , 0.3  , 0.6), Color(0), 1.0 , 0),
                                     vec3(-800, -400, 0),
                                     vec3(-800, -400, -1e5),
                                     vec3(800, -400, -1e5),
