@@ -20,8 +20,6 @@ private:
 
     static vec3 rndHemisphereDir(const vec3 &normal);
 
-    static vec3 glossyHemsiphereDir(const vec3 &reflect , const int m);
-
 public:
     void render(Scene scene) override;
 };
