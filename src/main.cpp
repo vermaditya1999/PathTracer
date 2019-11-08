@@ -90,8 +90,8 @@ int main(int argc , char *argv[])
 
             Rectangle *floor = new Rectangle(new Diffused(Color(0.1), Color(0), 1.0, 0),
                                              vec3(-485, -400, 1000),
-                                             vec3(-485, -400, -3010),
-                                             vec3(485, -400, -3010),
+                                             vec3(-485, -400, -1e5),
+                                             vec3(485, -400, -1e5),
                                              vec3(485, -400, 1000));
             scene.addObject(floor);
         }
