@@ -6,7 +6,7 @@
 - Antialiasing via jittered supersampling.
 
 ### Build Instructions
-The project uses CMake for generating build files. The minimum version required us CMake 3.5
+The project uses CMake (**minimum version 3.5**) for generating build files.
 For building the project:
 - Clone the repository (or download the zip file)  
   ```
