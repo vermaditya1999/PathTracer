@@ -108,7 +108,7 @@ void RealisticRenderer::render(Scene scene) {
     int n_pixels = height * width;  // Number of pixels
     int r_pixels = 0;  // Number of rendered pixels
 
-    fprintf(stderr, "\rProgress: %5.2f%%", 0.0);
+    fprintf(stdout, "\rProgress: %5.2f%%", 0.0);
 #pragma omp parallel for schedule(static, 1)
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
@@ -125,7 +125,7 @@ void RealisticRenderer::render(Scene scene) {
             }
 #pragma omp critical
             ++r_pixels;
-            fprintf(stderr, "\rProgress: %5.2f%%", (((double) r_pixels / n_pixels) * 100));
+            fprintf(stdout, "\rProgress: %5.2f%%", (((double) r_pixels / n_pixels) * 100));
 
             pix_shade /= jg_size * jg_size;
             pix_shade.clamp();
@@ -133,7 +133,7 @@ void RealisticRenderer::render(Scene scene) {
         }
     }
 
-    fprintf(stderr, "\n");
+    fprintf(stdout, "\n");
     camera->saveFile("image");
 }
 

@@ -7,9 +7,12 @@
 #include <renderer/RealisticRenderer.h>
 #include <material/Glossy.h>
 #include "Options.h"
+#include <chrono>
 
 int main(int argc , char *argv[])
 {
+
+    debug("Running in Debug mode ...", 1);
     Camera *camera = new SimpleCamera(vec3(0, 0, 100), vec3(0, 0, -1), vec3(0, 1, 0),
                                       30, 600, 800);
     Scene scene(camera, Color(0));
@@ -99,5 +102,11 @@ int main(int argc , char *argv[])
     }
 
     RealisticRenderer renderer;
+
+    auto start = std::chrono::high_resolution_clock::now();
     renderer.render(scene);
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+    fprintf(stdout, "Time elapsed: %lds\n", duration);
 }
