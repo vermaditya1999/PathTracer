@@ -18,7 +18,7 @@ For building the project:
   mkdir build
   cd build
   ```
-- By default, CMake will build in Release mode (optimized). To build in Debug mode add the `-DCMAKE_BUILD_MODE` flag with the `cmake` command.
+- By default, CMake will build in Release mode (optimized). To build in Debug mode set the `-DCMAKE_BUILD_TYPE=Debug` flag with the `cmake` command.
   ```
   cmake ..
   ```
