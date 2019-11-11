@@ -1,7 +1,8 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "openmp-use-default-none"
 #include <camera/SimpleCamera.h>
 #include <material/Dielectric.h>
 #include <material/Glossy.h>
-#include <material/Diffused.h>
 #include "renderer/RealisticRenderer.h"
 
 using ull = unsigned long long;
@@ -36,9 +37,12 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     Color shade;
     switch (material->type) {
         case Material::Type::GLOSSY: {
-            vec3 reflDir = reflect(incident, normal);
-            Ray reflRay(isecPt + reflDir * EPS, reflDir);
-            shade += tracePath(reflRay, depth - 1, scene);
+//            vec3 reflDir = reflect(incident, normal);
+//            Ray reflRay(isecPt + reflDir * EPS, reflDir);
+//            shade += tracePath(reflRay, depth - 1, scene);
+            vec3 rndDir = rndReflHemisphereDir(normal, ((Glossy *) material)->alpha);
+            Ray rndRay(isecPt + rndDir * EPS, rndDir);
+            shade += tracePath(rndRay, depth - 1, scene);
         }
             break;
         case Material::Type::DIFFUSED: {
@@ -99,28 +103,30 @@ void RealisticRenderer::render(Scene scene) {
     int height = camera->getImageHeight();
     int width = camera->getImageWidth();
 
-    ull jg_size = 2;  // Jitter grid size
-    ull n_samples = 1;  // Number of samples
-    ull t_samples = n_samples * height * width * jg_size * jg_size;  // Total samples
-    ull c_samples = 0;  // Completed samples
+    int jg_size = 2;  // Jitter grid size (n x n grid)
+    int n_samples = 100;  // Number of samples
+    int n_pixels = height * width;  // Number of pixels
+    int r_pixels = 0;  // Number of rendered pixels
 
-    fprintf(stdout, "\rProgress: %5.2Lf%%", ((long double) c_samples / t_samples) * 100);
+    fprintf(stderr, "\rProgress: %5.2f%%", 0.0);
+#pragma omp parallel for schedule(static, 1)
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color pix_shade;
             for (size_t grid_i = 0; grid_i < jg_size; ++grid_i) {
                 for (size_t grid_j = 0; grid_j < jg_size; ++grid_j) {
-                	Color cur_shade;
+                    Color cur_shade;
                     for (size_t ns = 0; ns < n_samples; ++ns) {
                         Ray ray = camera->getRay(i, j, grid_i, grid_j, jg_size);
                         cur_shade += tracePath(ray, 8, scene);
-                        ++c_samples;
                     }
                     pix_shade += cur_shade / n_samples;
                 }
             }
-            fprintf(stdout, "\rProgress: %5.2Lf%%", ((long double) c_samples / t_samples) * 100);
-            
+#pragma omp critical
+            ++r_pixels;
+            fprintf(stderr, "\rProgress: %5.2f%%", (((double) r_pixels / n_pixels) * 100));
+
             pix_shade /= jg_size * jg_size;
             pix_shade.clamp();
             camera->shadePixel(i, j, pix_shade);
@@ -198,3 +204,36 @@ vec3 RealisticRenderer::rndHemisphereDir(const vec3 &normal) {
 
     return localVec;
 }
+
+vec3 RealisticRenderer::rndReflHemisphereDir(const vec3 &normal, double n) {
+    // Create an axis (u, v, w) with w oriented along normal
+    vec3 u, v, w;
+
+    w = normal;
+    if (fabs(normal.x) > EPS) {
+        u = vec3::cross(vec3(0, 0, 1), w).normalize();
+    } else {
+        u = vec3::cross(vec3(1, 0, 0), w).normalize();
+    }
+    v = vec3::cross(w, u);
+
+    // Create random unit vector in spherical coordinates
+    // Reference: Realistic Ray Tracing
+    double r1 = drand48();
+    double r2 = drand48();
+
+    double theta = acos(pow(1 - r1, 1 / (n + 1)));
+    double phi = 2 * M_PI * r2;
+
+    double cost = cos(theta);
+    double sint = sin(theta);
+    double cosp = cos(phi);
+    double sinp = sin(phi);
+
+    // Map the spherical coordinates to world axis
+    vec3 localVec = ((cosp * sint * u) + (sinp * sint * v) + (cost * w)).normalize();
+
+    return localVec;
+}
+
+#pragma clang diagnostic pop

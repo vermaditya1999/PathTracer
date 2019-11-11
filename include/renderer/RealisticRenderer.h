@@ -20,6 +20,8 @@ private:
 
     static vec3 rndHemisphereDir(const vec3 &normal);
 
+    static vec3 rndReflHemisphereDir(const vec3 &normal, double n);
+
 public:
     void render(Scene scene) override;
 };

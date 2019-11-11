@@ -10,11 +10,11 @@
 
 int main(int argc , char *argv[])
 {
-    Camera *camera = new SimpleCamera(vec3(0, 0, 0), vec3(0, 0, -1), vec3(0, 1, 0),
+    Camera *camera = new SimpleCamera(vec3(0, 0, 100), vec3(0, 0, -1), vec3(0, 1, 0),
                                       30, 600, 800);
     Scene scene(camera, Color(0));
 
-    int scene_id = 0;
+    int scene_id = 1;
     switch (scene_id) {
         case 0: {
             int DX = 475, DY = 300;
@@ -61,8 +61,8 @@ int main(int argc , char *argv[])
             scene.addObject(backWall);
 
             int radius = 125;
-            Sphere *sphere1 = new Sphere(new Glossy(Color(1.0), Color(0), 0.2, 0.7, 0.1, 32),
-                                         radius, vec3(-225, DY - 1.5 * radius, -2100));
+            Sphere *sphere1 = new Sphere(new Glossy(Color(1.0), Color(0), 0.2, 0.7, 0.1, 1000),
+                                         radius, vec3(-225, DY - 1.5 * radius, -2000));
             scene.addObject(sphere1);
 
             Sphere *sphere2 = new Sphere(new Dielectric(Color(1.0), Color(), 1.5),
@@ -70,30 +70,30 @@ int main(int argc , char *argv[])
             scene.addObject(sphere2);
 
             Sphere *sphere3 = new Sphere(new Diffused(Color(0.27, 0.54, 0.46), Color(0), 0.2, 0.1),
-                                         radius, vec3(-150, -DY + radius, -1500));
+                                         radius, vec3(-150, -DY + radius, -1600));
             scene.addObject(sphere3);
 
             // Light
             Sphere *light1 = new Sphere(new Diffused(Color(1.0), Color(10.0), 1.0, 0.0),
-                                        2 * radius, vec3(0, DY + 1.5 * radius, -1600));
+                                        1e5, vec3(0, DY + 1e5 - 0.2, -2000));
             scene.addObject(light1);
         }
             break;
         case 1: {
-            Sphere *sphere3 = new Sphere(new Diffused(Color(1.0, 1.0, 1.0), Color(1.0), 1.0, 0),
-                                         100, vec3(0, -100, -2000));
-            scene.addObject(sphere3);
+            // Light
+            scene.addObject(new Sphere(new Diffused(Color(1.0, 1.0, 1.0), Color(1.0), 1.0, 0),
+                                       100, vec3(0, -100, -2000)));
 
-            Sphere *sphere4 = new Sphere(new Diffused(Color(0.5), Color(0), 1.0, 0),
-                                         100, vec3(0, -300, -2000));
-            scene.addObject(sphere4);
+            // Diffused ball
+            scene.addObject(new Sphere(new Diffused(Color(0.5), Color(0), 1.0, 0),
+                                       100, vec3(0, -300, -2000)));
 
-            Rectangle *floor = new Rectangle(new Diffused(Color(0.1), Color(0), 1.0, 0),
-                                             vec3(-485, -400, 1000),
-                                             vec3(-485, -400, -3010),
-                                             vec3(485, -400, -3010),
-                                             vec3(485, -400, 1000));
-            scene.addObject(floor);
+            // Floor
+            scene.addObject(new Rectangle(new Diffused(Color(0.1), Color(0), 1.0, 0),
+                                          vec3(-1e5, -400, 0),
+                                          vec3(-1e5, -400, -1e5),
+                                          vec3(1e5, -400, -1e5),
+                                          vec3(1e5, -400, 0)));
         }
             break;
     }
