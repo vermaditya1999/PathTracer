@@ -13,11 +13,11 @@ int main(int argc , char *argv[])
 {
 
     debug("Running in Debug mode ...", 1);
-    Camera *camera = new SimpleCamera(vec3(0, 0, 100), vec3(0, 0, -1), vec3(0, 1, 0),
-                                      30, 600, 800);
+    Camera *camera = new SimpleCamera(vec3(0, 0, -100), vec3(0, 0, -1), vec3(0, 1, 0),
+                                      30, 600, 800 , 1000  , 0.01);
     Scene scene(camera, Color(0));
 
-    int scene_id = 1;
+    int scene_id = 0;
     switch (scene_id) {
         case 0: {
             int DX = 475, DY = 300;
