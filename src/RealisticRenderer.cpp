@@ -3,6 +3,7 @@
 #include <camera/SimpleCamera.h>
 #include <material/Dielectric.h>
 #include <material/Glossy.h>
+#include <material/SpecularDiffused.h>
 #include "renderer/RealisticRenderer.h"
 
 using ull = unsigned long long;
@@ -37,7 +38,7 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
     Color shade;
     switch (material->type) {
         case Material::Type::GLOSSY: {
-//            vec3 reflDir = reflect(incident, normal);
+//            vec3 reflDir = reflect(incident, normal);  // Mirror
 //            Ray reflRay(isecPt + reflDir * EPS, reflDir);
 //            shade += tracePath(reflRay, depth - 1, scene);
             vec3 rndDir = rndReflHemisphereDir(normal, ((Glossy *) material)->alpha);
@@ -51,6 +52,24 @@ Color RealisticRenderer::tracePath(Ray &ray, int depth, Scene &scene) {
             shade += tracePath(rndRay, depth - 1, scene);
         }
             break;
+        case Material::Type::SPECULARDIFFUSED: {
+            double prefl = ((SpecularDiffused*)material)->prefl;
+            double R0 = prefl;
+            double Rtheta = R0 + (1 - R0) * (1 - vec3::dot(incident, normal));  // specular reflectance
+
+            double prob = drand48();
+            if (prob < Rtheta) {
+                // Choose reflections
+                vec3 reflDir = reflect(incident, normal);
+                Ray reflRay(isecPt + reflDir * EPS, reflDir);
+                shade += Rtheta * tracePath(reflRay, depth - 1, scene);
+            } else {
+                // Choose diffused surface
+                vec3 rndDir = rndHemisphereDir(normal);
+                Ray rndRay(isecPt + rndDir * EPS, rndDir);
+                shade += (1 - Rtheta) * tracePath(rndRay, depth - 1, scene);
+            }
+        } break;
         case Material::Type::DIELECTRIC: {
             double eta = ((Dielectric *) material)->eta;
             double R;
@@ -104,7 +123,7 @@ void RealisticRenderer::render(Scene scene) {
     int width = camera->getImageWidth();
 
     int jg_size = 2;  // Jitter grid size (n x n grid)
-    int n_samples = 100;  // Number of samples
+    int n_samples = 1000;  // Number of samples
     int n_pixels = height * width;  // Number of pixels
     int r_pixels = 0;  // Number of rendered pixels
 

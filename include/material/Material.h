@@ -8,7 +8,8 @@ public:
     enum class Type {
         GLOSSY,
         DIFFUSED,
-        DIELECTRIC
+        DIELECTRIC,
+        SPECULARDIFFUSED
     };
 
     Color color;

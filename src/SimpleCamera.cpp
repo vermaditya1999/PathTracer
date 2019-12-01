@@ -46,6 +46,7 @@ Ray SimpleCamera::getRay(int row, int col, int i, int j, int gridSize) const {
         direction = direction - point;
 
     }
+
     direction.normalize();
     return Ray(e + point, direction - point, 0.0);
 }

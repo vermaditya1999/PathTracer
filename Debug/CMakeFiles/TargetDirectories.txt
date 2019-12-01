@@ -1,0 +1,3 @@
+/home/himself/CLionProjects/PathTracer/Debug/CMakeFiles/rebuild_cache.dir
+/home/himself/CLionProjects/PathTracer/Debug/CMakeFiles/PathTracer.dir
+/home/himself/CLionProjects/PathTracer/Debug/CMakeFiles/edit_cache.dir
