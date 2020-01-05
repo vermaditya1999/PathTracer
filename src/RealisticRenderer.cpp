@@ -1,5 +1,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "openmp-use-default-none"
+#include <omp.h>
 #include <camera/SimpleCamera.h>
 #include <material/Dielectric.h>
 #include <material/Glossy.h>
