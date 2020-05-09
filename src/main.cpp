@@ -6,15 +6,15 @@
 #include <material/Dielectric.h>
 #include <renderer/RealisticRenderer.h>
 #include <material/Glossy.h>
-#include "Options.h"
-#include <chrono>
+#include <Options.h>
 #include <material/SpecularDiffused.h>
+#include <chrono>
 
 int main(int argc , char *argv[])
 {
     debug("Running in Debug mode ...", 1);
     Camera *camera = new SimpleCamera(vec3(0, 0, -100), vec3(0, 0, -1), vec3(0, 1, 0),
-                                      30, 600, 800 , 15000 , 0.002);
+                                      30, 600, 800);
     Scene scene(camera, Color(0));
 
     int scene_id = 0;

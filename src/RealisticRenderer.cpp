@@ -1,5 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "openmp-use-default-none"
 #include <omp.h>
 #include <camera/SimpleCamera.h>
 #include <material/Dielectric.h>
@@ -124,12 +122,12 @@ void RealisticRenderer::render(Scene scene) {
     int width = camera->getImageWidth();
 
     int jg_size = 2;  // Jitter grid size (n x n grid)
-    int n_samples = 1000;  // Number of samples
+    int n_samples = 100;  // Number of samples
     int n_pixels = height * width;  // Number of pixels
     int r_pixels = 0;  // Number of rendered pixels
 
     fprintf(stdout, "\rProgress: %5.2f%%", 0.0);
-#pragma omp parallel for schedule(static, 1)
+#pragma omp parallel for schedule(dynamic)
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             Color pix_shade;
@@ -143,14 +141,14 @@ void RealisticRenderer::render(Scene scene) {
                     pix_shade += cur_shade / n_samples;
                 }
             }
-#pragma omp critical
-            ++r_pixels;
-            fprintf(stdout, "\rProgress: %5.2f%%", (((double) r_pixels / n_pixels) * 100));
-
             pix_shade /= jg_size * jg_size;
             pix_shade.clamp();
             camera->shadePixel(i, j, pix_shade);
         }
+#pragma omp critical
+        r_pixels += width;
+        fprintf(stdout, "\rProgress: %5.2f%%", (((double) r_pixels / n_pixels) * 100));
+        fflush(stdout);
     }
 
     fprintf(stdout, "\n");
@@ -255,5 +253,3 @@ vec3 RealisticRenderer::rndReflHemisphereDir(const vec3 &normal, double n) {
 
     return localVec;
 }
-
-#pragma clang diagnostic pop
