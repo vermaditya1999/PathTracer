@@ -2,7 +2,7 @@
 
 Cornell Box                | 
 :-------------------------:|
-![](renders/cornell_box.jpg)   |
+![](renders/cornell_box.png)   |
 
 ### Features
 - Unbiased Monte Carlo Path tracer.
