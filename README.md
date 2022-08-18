@@ -1,5 +1,9 @@
 # Path Tracer
 
+Cornell Box                | 
+:-------------------------:|
+![](renders/cornell_box.jpg)   |
+
 ### Features
 - Unbiased Monte Carlo Path tracer.
 - Lambertian, Dielectric and Mirror BRDF.
